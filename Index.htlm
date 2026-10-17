@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Salima Transfert - Pi</title>
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+body{background:linear-gradient(135deg,#5b2cb4,#8e44ad);min-height:100vh;color:#fff;padding:20px}
+.container{max-width:450px;margin:0 auto}
+.header{text-align:center;padding:20px 0}
+.logo{font-size:38px;font-weight:900}
+.logo span{color:#ffcc00}
+.card{background:#fff;color:#333;border-radius:20px;padding:25px;margin-top:20px;box-shadow:0 15px 35px rgba(0,0,0,.2)}
+.field{margin-bottom:18px}
+.field label{font-weight:600;font-size:14px;display:block;margin-bottom:6px;color:#555}
+.field input,.field select{width:100%;padding:14px;border:2px solid #eee;border-radius:12px;font-size:16px;outline:none}
+.field input:focus{border-color:#5b2cb4}
+.amount-box{display:flex;gap:10px}
+.amount-box input{flex:2}
+.amount-box select{flex:1}
+.fees{background:#f8f5ff;border-radius:12px;padding:12px;font-size:13px;margin:10px 0}
+.fees div{display:flex;justify-content:space-between;margin:4px 0}
+.btn{width:100%;padding:16px;border:none;border-radius:14px;font-size:17px;font-weight:700;cursor:pointer}
+.btn-pi{background:linear-gradient(90deg,#ffcc00,#ffb700);color:#5b2cb4}
+.btn-secondary{background:#f0f0f0;color:#333;margin-top:10px}
+.status{margin-top:15px;padding:12px;border-radius:10px;font-size:14px;display:none}
+.status.success{background:#e6f9e6;color:#0a7a0a;display:block}
+.status.error{background:#ffe6e6;color:#a00;display:block}
+.user-info{text-align:center;margin-bottom:15px;font-weight:600;color:#5b2cb4}
+.footer{text-align:center;margin-top:25px;font-size:12px;opacity:.7}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<div class="logo">SALIMA<span> TRANSFERT</span></div>
+<div>Envoi rapide avec Pi Network - Niger</div>
+</div>
+<div class="card">
+<div id="userInfo" class="user-info" style="display:none"></div>
+<button id="authBtn" class="btn btn-secondary" onclick="authPi()">Se connecter avec Pi</button>
+<div class="field"><label>Destinataire</label><input type="text" id="receiver" placeholder="Nom beneficiaire"></div>
+<div class="field"><label>Telephone</label><input type="tel" id="phone" placeholder="+227 XX XX XX XX"></div>
+<div class="field"><label>Montant</label><div class="amount-box"><input type="number" id="amount" value="5"><select id="currency"><option>Pi</option></select></div></div>
+<div class="fees"><div><span>Frais 2%</span><span>0.10 Pi</span></div><div style="font-weight:700;border-top:1px dashed #ddd;padding-top:6px;margin-top:6px"><span>Total</span><span id="total">5.10 Pi</span></div></div>
+<button class="btn btn-pi" onclick="payWithPi()">Payer avec Pi & Envoyer</button>
+<div id="status" class="status"></div>
+</div>
+<div class="footer">Salima Transfert © 2026 - Niamey<br>Pi Network Payment</div>
+</div>
+<script>
+Pi.init({version:"2.0",sandbox:false});
+let piUser=null;
+document.getElementById('amount').addEventListener('input',function(){let v=parseFloat(this.value)||0;document.getElementById('total').textContent=(v*1.02).toFixed(2)+' Pi';});
+function showStatus(msg,type){let el=document.getElementById('status');el.textContent=msg;el.className='status '+type;}
+async function authPi(){try{showStatus('Connexion Pi...','success');let auth=await Pi.authenticate(['username','payments'],onIncompletePaymentFound);piUser=auth.user;document.getElementById('userInfo').style.display='block';document.getElementById('userInfo').textContent='Bonjour @'+piUser.username;document.getElementById('authBtn').style.display='none';showStatus('Connecte: '+piUser.username,'success');}catch(e){showStatus('Erreur: '+e.message,'error');}}
+function onIncompletePaymentFound(payment){console.log(payment);}
+async function payWithPi(){let receiver=document.getElementById('receiver').value;let phone=document.getElementById('phone').value;let amountVal=parseFloat(document.getElementById('amount').value);if(!receiver||!phone||!amountVal){showStatus('Remplis tous les champs','error');return;}if(!piUser){await authPi();return;}try{showStatus('Creation paiement...','success');let paymentData={amount:(amountVal*1.02),memo:'Salima Transfert: '+amountVal+' Pi vers '+receiver,metadata:{receiver,phone}};await Pi.createPayment(paymentData,{onReadyForServerApproval:function(paymentId){showStatus('Approbation serveur ID:'+paymentId+' - Configure backend','success');console.log(paymentId);},onReadyForServerCompletion:function(paymentId,txid){showStatus('Transfert confirme! TX:'+txid.substring(0,15)+'... Vers '+receiver,'success');},onCancel:function(){showStatus('Paiement annule','error');},onError:function(error){showStatus('Erreur: '+error.message,'error');}});}catch(e){showStatus('Erreur: '+e.message,'error');}}
+</script>
+</body>
+</html>
