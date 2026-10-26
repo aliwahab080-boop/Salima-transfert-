@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Salima Transfert - Niger</title>
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<style>
+body{font-family:system-ui;background:#6d28d9;color:white;margin:0}
+.header{padding:20px;text-align:center;background:#4c1d95}
+.card{background:white;color:#111;border-radius:16px;padding:20px;margin:16px}
+.btn{background:#6d28d9;color:white;border:none;padding:14px;border-radius:12px;width:100%;font-weight:bold}
+.input{width:100%;padding:12px;border-radius:10px;border:1px solid #ddd;margin:8px 0}
+</style>
+</head>
+<body>
+<div class="header"><h1>Salima Transfert</h1><p>NITA AMANA Airtel - Pi Network</p></div>
+<div class="card">
+<h3>Connexion Pi</h3>
+<p id="user">Non connecté</p>
+<button class="btn" onclick="loginPi()">Connexion Pi</button>
+</div>
+<div class="card">
+<h3>Envoyer</h3>
+<input class="input" id="montant" placeholder="Montant FCFA">
+<select class="input" id="operateur"><option>NITA</option><option>AMANA</option><option>Airtel Money</option></select>
+<input class="input" id="numero" placeholder="Numéro">
+<button class="btn" onclick="payerPi()">Payer frais avec Pi</button>
+<p id="status"></p>
+</div>
+<script>
+Pi.init({version:"2.0", sandbox:false});
+async function loginPi(){
+ const auth = await Pi.authenticate(['username','payments'], ()=>{});
+ document.getElementById('user').innerText = "Bonjour @"+auth.user.username;
+}
+async function payerPi(){
+ const montant = document.getElementById('montant').value;
+ const montantPi = (parseFloat(montant)*0.05/5000).toFixed(4);
+ await Pi.createPayment({amount:Math.max(0.01,montantPi),memo:"Salima "+montant+" FCFA",metadata:{montant}},{
+  onReadyForServerApproval:(id)=>{document.getElementById('status').innerText="Approuvé "+id},
+  onReadyForServerCompletion:(id,txid)=>{document.getElementById('status').innerText="✅ Paiement réussi "+txid},
+  onCancel:()=>{document.getElementById('status').innerText="Annulé"},
+  onError:(e)=>{document.getElementById('status').innerText=e.message}
+ });
+}
+</script>
+</body>
+  </html>
