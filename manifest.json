@@ -1,0 +1,17 @@
+{
+  "name": "Salima Transfert d'Argent",
+  "short_name": "SALIMA",
+  "description": "Salima transfert d'argent dépôt d'argent instantané et retrait",
+  "start_url": "./login.html",
+  "display": "standalone",
+  "background_color": "#4a148c",
+  "theme_color": "#4a148c",
+  "icons": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMDAiIGZpbGw9IiM0YTE0OGMiLz48cGF0aCBkPSJNMjU2IDgwIEMxODAgODAgMTQwIDEyMCAxNDAgMTgwIEMxNDAgMjQwIDEyMCAyODAgMTYwIDMyMCBDMjAwIDM2MCAyMjAgMzQwIDI1NiAzMDAgQzI5MiAzNDAgMzEyIDM2MCAzNTIgMzIwIEMzOTIgMjgwIDM3MiAyNDAgMzcyIDE4MCBDMzcyIDEyMCAzMzIgODAgMjU2IDgwIFogTTMyMCAxMjAgQzMyMCAxOTAgMjgwIDI0MCAyNDAgMjYwIEMyMDAgMjQwIDE4MCAxOTAgMTkwIDE1MCBDMjAwIDEzMCAyODAgMTAwIDMyMCAxMjAgWiIgZmlsbD0id2hpdGUiLz48L3N2Zz4=",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
