@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Salima Transfert ALI + Nita Amana</title>
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<style>
+body{font-family:sans-serif;max-width:430px;margin:0 auto;background:#f5f6fb;padding:0 0 100px}
+.header{background:#C62828;color:#fff;padding:20px 16px 40px;border-radius:0 0 24px 24px}
+.solde{background:#fff;margin:-26px 16px 0;padding:14px 16px;border-radius:18px;box-shadow:0 6px 20px rgba(0,0,0,.12);display:flex;justify-content:space-between;align-items:center}
+.badge{background:#d4edda;color:#155724;padding:6px 12px;border-radius:20px;font-size:12px;margin:10px 16px;display:inline-block}
+.card{background:linear-gradient(135deg,#ede7ff,#fff);border:1.5px solid #c4b5fd;margin:0 16px;padding:14px;border-radius:16px;display:flex;gap:12px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 16px}
+.item{background:#fff;border-radius:14px;padding:12px 4px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.06);cursor:pointer;border:none}
+.item b{font-size:11px;display:block;margin-top:6px}
+.btn{background:#5b21b6;color:#fff;width:calc(100% - 32px);margin:14px 16px;padding:16px;border:none;border-radius:14px;font-weight:900;cursor:pointer}
+.btn-green{background:#0ab26a;color:#fff;width:100%;padding:14px;border:none;border-radius:12px;font-weight:800;margin-top:10px}
+.nav{position:fixed;bottom:0;max-width:430px;width:100%;background:#fff;display:flex;justify-content:space-around;padding:10px 0;border-top:1px solid #eee}
+.modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.65);z-index:99;align-items:center;justify-content:center;padding:16px}
+.modalBox{background:#fff;width:100%;max-width:400px;padding:20px;border-radius:20px;max-height:90vh;overflow:auto}
+.modalBox input,.modalBox select{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:10px;box-sizing:border-box}
+.conn{margin:0 16px;background:#fff;border-left:4px solid #0ab26a;padding:12px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+</style>
+</head>
+<body>
+<div class="header"><h1 style="margin:0">Salima Transfert<br>ALI × Amana Nita</h1><small>Agent Niamey +22799963777</small></div>
+<div class="solde"><div><small>Solde principal</small><br><b style="font-size:22px">+22799963777</b><br><small id="soldeTxt">3 986 000 XOF ≈ 124,56 Pi</small></div><div style="background:#0ab26a;color:#fff;width:44px;height:32px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:20px">+</div></div>
+<div class="badge">✅ Connecté : Pi • Amana • Nita (mode agent)</div>
+
+<div class="conn">
+<b>🔗 Connexion active:</b><br>
+<small>1. Salima → Amana: Tu envoies de Salima vers compte Amana client</small><br>
+<small>2. Nita → Salima: Tu reçois code Nita et tu crédites Salima</small>
+</div>
+
+<div class="card" style="margin-top:12px"><div style="font-size:36px;color:#6d28d9;font-weight:900">Pi π</div><div><b style="color:#5b21b6">@salima.ndiaye</b><br><small>Solde Pi: 124,56 Pi</small><br><small>≈ 3 986 000 XOF</small></div></div>
+
+<h3 style="margin:18px 16px 8px">Services</h3>
+<div class="grid">
+<button class="item" onclick="openModal('nitaModal')" style="border:2px solid #0ab26a;background:#e8f5e9">🔄<b>Salima → Nita / Amana</b></button>
+<button class="item" onclick="openModal('recevoirModal')" style="border:2px solid #C62828;background:#ffebee">📥<b>Nita → Salima (Encaisser)</b></button>
+<button class="item" onclick="openModal('moiModal')">↗️<b>Envoi à moi même</b></button>
+<button class="item" onclick="openModal('factureModal')">🧾<b>Payer Facture NIGELEC</b></button>
+<button class="item" onclick="alert('Achat credit bientôt')">📱<b>Achat credit</b></button>
+<button class="item" onclick="alert('Compte à compte')">👥<b>Compte à compte</b></button>
+</div>
+
+<button class="btn" onclick="openModal('nitaModal')">Pi → Envoyer vers Amana / Nita avec Pi</button>
+
+<!-- 1. SALIMA -> NITA/AMANA -->
+<div id="nitaModal" class="modal" onclick="closeAll()"><div class="modalBox" onclick="event.stopPropagation()">
+<h3>🔄 Salima → Nita / Amana</h3>
+<small>Tu envoies depuis ton solde Salima</small>
+<select id="destType"><option value="AMANA">Amana Banque Islamique</option><option value="NITA">Nita Transfert National</option><option value="NITAINT">Nita International</option></select>
+<input id="destNum" placeholder="Numéro compte Amana / Nita client (ex: 22790...)">
+<input id="destNom" placeholder="Nom du bénéficiaire">
+<input id="montantNita" type="number" placeholder="Montant XOF">
+<p style="font-size:12px">Équivalent Pi: <b id="piNita">0 Pi</b> • Frais agent: 0%</p>
+<button class="btn-green" onclick="envoyerNita()">Confirmer envoi vers <span id="labelDest">Amana</span></button>
+<small style="color:#666">Après validation, tu iras sur ton app Amana/Nita pour finaliser le transfert avec le reçu STALI</small>
+<br><button style="width:100%;padding:10px;border:none;background:#eee;border-radius:10px;margin-top:10px" onclick="closeAll()">Annuler</button>
+</div></div>
+
+<!-- 2. NITA -> SALIMA -->
+<div id="recevoirModal" class="modal" onclick="closeAll()"><div class="modalBox" onclick="event.stopPropagation()">
+<h3>📥 Nita → Salima (Encaisser)</h3>
+<small>Client t'a envoyé via Nita/Amana, tu crédites Salima</small>
+<select id="srcType"><option>Nita Reçu</option><option>Amana Reçu</option><option>Cash → Salima</option></select>
+<input id="codeNita" placeholder="Code Nita / Réf Amana">
+<input id="montantRecu" type="number" placeholder="Montant reçu XOF">
+<input id="telClient" placeholder="Tél client ex: +227...">
+<button class="btn-green" onclick="recevoirNita()">Encaisser et créditer Salima</button>
+<button style="width:100%;padding:10px;border:none;background:#eee;border-radius:10px;margin-top:10px" onclick="closeAll()">Annuler</button>
+</div></div>
+
+<!-- MOI MEME -->
+<div id="moiModal" class="modal" onclick="closeAll()"><div class="modalBox" onclick="event.stopPropagation()">
+<h3>↗️ Envoi à moi même</h3>
+<select id="de"><option>Solde principal +22799963777</option><option>Pi Wallet 124,56 Pi</option><option>Coffre Salima</option><option>Amana Agent</option><option>Nita Agent</option></select>
+<select id="vers"><option>Coffre Salima</option><option>Solde principal +22799963777</option><option>Amana Agent</option><option>Nita Agent</option><option>Orange Money</option></select>
+<input id="montantMoi" type="number" placeholder="Montant XOF"><p style="font-size:12px">Équiv: <b id="piMoi">0 Pi</b></p>
+<button class="btn-green" onclick="validerMoi()">Confirmer</button>
+<button style="width:100%;padding:10px;border:none;background:#eee;border-radius:10px;margin-top:10px" onclick="closeAll()">Annuler</button>
+</div></div>
+
+<!-- FACTURE -->
+<div id="factureModal" class="modal" onclick="closeAll()"><div class="modalBox" onclick="event.stopPropagation()">
+<h3>Payer Facture avec Pi</h3><select id="type"><option>NIGELEC</option><option>SEEN</option><option>Canal+</option></select><input id="num" placeholder="Numéro compteur"><input id="montant" type="number" placeholder="Montant XOF"><p style="font-size:12px">Tu paieras: <b id="piCalc">0 Pi</b></p><button class="btn-green" onclick="payerPi()">Payer avec Pi</button><button style="width:100%;padding:10px;border:none;background:#eee;border-radius:10px;margin-top:10px" onclick="closeAll()">Annuler</button></div></div>
+
+<div class="nav"><div style="color:#C62828">🏠<br>Accueil</div><div>🕒<br>Historique</div><div>💳<br>Visa</div><div>🔒<br>Coffre</div><div>👤<br>Profile</div></div>
+
+<script>
+function openModal(id){document.getElementById(id).style.display='flex'; if(id=='nitaModal'){updateLabel()}}
+function closeAll(){document.querySelectorAll('.modal').forEach(m=>m.style.display='none')}
+function updateLabel(){let v=document.getElementById('destType').value; document.getElementById('labelDest').innerText=v}
+document.getElementById('destType').addEventListener('change',updateLabel);
+document.getElementById('montantNita').addEventListener('input',function(){document.getElementById('piNita').innerText=(this.value/32000).toFixed(4)+' Pi'});
+document.getElementById('montantMoi').addEventListener('input',function(){document.getElementById('piMoi').innerText=(this.value/32000).toFixed(4)+' Pi'});
+document.getElementById('montant').addEventListener('input',function(){document.getElementById('piCalc').innerText=(this.value/32000).toFixed(4)+' Pi'});
+
+function envoyerNita(){
+ let m=document.getElementById('montantNita').value; let dest=document.getElementById('destNum').value; let nom=document.getElementById('destNom').value; let type=document.getElementById('destType').value;
+ if(!m||!dest){alert('Remplis numéro et montant');return}
+ let ref='STALI-'+Date.now().toString().slice(-6);
+ let pi=(m/32000).toFixed(2);
+ alert('✅ CONNEXION SALIMA → '+type+'\n\n'+m+' XOF ('+pi+' Pi)\nVers: '+dest+' ('+nom+')\n\nRéf: '+ref+'\n\nÉtape 2: Ouvre ton app '+type+' et envoie '+m+' XOF avec ce réf. Client recevra SMS.\n\nMode agent: Tu gardes 1% commission.');
+ closeAll();
+}
+function recevoirNita(){
+ let m=document.getElementById('montantRecu').value; let code=document.getElementById('codeNita').value;
+ if(!m||!code){alert('Remplis code et montant');return}
+ let ref='STALI-ENC-'+Date.now().toString().slice(-5);
+ alert('✅ CONNEXION NITA → SALIMA\n\nCode '+code+' encaissé: '+m+' XOF\nCrédité sur +22799963777\n\nRéf: '+ref+'\nNouveau solde Salima: + ' + m + ' XOF\n\nEnvoie reçu au client par WhatsApp.');
+ closeAll();
+}
+function validerMoi(){ let m=document.getElementById('montantMoi').value; if(!m){alert('Montant');return} alert('✅ '+m+' XOF ('+(m/32000).toFixed(2)+' Pi) de '+document.getElementById('de').value+' vers '+document.getElementById('vers').value+'\nRef: STALI-'+Date.now().toString().slice(-6)); closeAll();}
+function payerPi(){ let m=document.getElementById('montant').value; if(!m){alert('Montant');return} alert('✅ Facture '+document.getElementById('type').value+' payée '+m+' XOF = '+(m/32000).toFixed(4)+' Pi'); closeAll();}
+</script>
+</body>
+  </html>
