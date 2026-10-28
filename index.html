@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Salima Transfert ALI</title>
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<style>
+body{font-family:sans-serif;max-width:430px;margin:0 auto;background:#f5f6fb;padding:0 0 90px}
+.header{background:#C62828;color:#fff;padding:20px 16px 40px;border-radius:0 0 24px 24px}
+.solde{background:#fff;margin:-26px 16px 0;padding:14px 16px;border-radius:18px;box-shadow:0 6px 20px rgba(0,0,0,.12);display:flex;justify-content:space-between;align-items:center}
+.badge{background:#d4edda;color:#155724;padding:6px 12px;border-radius:20px;font-size:12px;margin:10px 16px;display:inline-block}
+.card{background:linear-gradient(135deg,#ede7ff,#fff);border:1.5px solid #c4b5fd;margin:0 16px;padding:14px;border-radius:16px;display:flex;gap:12px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 16px}
+.item{background:#fff;border-radius:14px;padding:12px 4px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.06);cursor:pointer;border:none}
+.item b{font-size:11px;display:block;margin-top:6px}
+.btn{background:#5b21b6;color:#fff;width:calc(100% - 32px);margin:14px 16px;padding:16px;border:none;border-radius:14px;font-weight:900;cursor:pointer}
+.nav{position:fixed;bottom:0;max-width:430px;width:100%;background:#fff;display:flex;justify-content:space-around;padding:10px 0;border-top:1px solid #eee}
+.modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:99;align-items:center;justify-content:center}
+.modalBox{background:#fff;width:90%;max-width:400px;padding:20px;border-radius:20px}
+.modalBox input,.modalBox select{width:100%;padding:12px;margin:8px 0;border:1px solid #ccc;border-radius:10px;box-sizing:border-box}
+</style>
+</head>
+<body>
+<div class="header"><h1 style="margin:0">Salima Transfert<br>ALI</h1></div>
+<div class="solde"><div><small>Solde principal</small><br><b style="font-size:26px">+22799963777</b></div><div style="background:#0ab26a;color:#fff;width:44px;height:32px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:20px">+</div></div>
+<div class="badge">✅ Yor Pi Wallet connecté • Sécurisé par Pi Network</div>
+<div class="card"><div style="font-size:40px;color:#6d28d9;font-weight:900">Pi π</div><div><small>Nom d'utilisateur Pi:</small><br><b style="color:#5b21b6">@salima.ndiaye</b><br><small>Solde Pi:</small><br><b style="font-size:22px">124,56 Pi</b><br><small>≈ 3 986 000 XOF</small></div></div>
+<div style="margin:10px 16px;background:#e8e6f0;padding:10px;border-radius:12px"><small>Taux</small><br><b>1 Pi = 32 000 XOF</b> • Niamey</div>
+
+<h3 style="margin:18px 16px 8px">Services</h3>
+<div class="grid">
+<button class="item" onclick="alert('Envoyer argent bientôt')">✈️<b>Envoyer de l'argent</b></button>
+<button class="item" onclick="openModal('compteModal')">👥<b>Compte à compte</b></button>
+<button class="item" style="border:2px solid #C62828;background:#ffebee" onclick="openModal('moiModal')">↗️<b>Envoi à moi même</b></button>
+<button class="item" onclick="alert('Encaisser bientôt')">💵<b>Encaisser un envoi</b></button>
+<button class="item" onclick="alert('Achat credit bientôt')">📱<b>Achat de credit</b></button>
+<button class="item" onclick="openModal('factureModal')">🧾<b>Payer Facture</b></button>
+</div>
+
+<button class="btn" onclick="openModal('factureModal')">Pi Payer facture NIGELEC • SEEN avec Pi</button>
+
+<!-- MODAL ENVOI A MOI MEME -->
+<div id="moiModal" class="modal" onclick="this.style.display='none'"><div class="modalBox" onclick="event.stopPropagation()">
+<h3>↗️ Envoi à moi même</h3>
+<small>De:</small><select id="de"><option>Solde principal +22799963777</option><option>Pi Wallet 124,56 Pi</option><option>Coffre Salima</option></select>
+<small>Vers:</small><select id="vers"><option>Coffre Salima</option><option>Solde principal +22799963777</option><option>Orange Money</option><option>Airtel Money</option></select>
+<input id="montantMoi" type="number" placeholder="Montant XOF ex: 50000">
+<p style="font-size:12px">Frais: <b>0 XOF</b> entre tes comptes • Reçu instantané</p>
+<p style="font-size:12px;color:#5b21b6">Équivalent: <b id="piMoi">0 Pi</b></p>
+<button class="btn" style="width:100%;margin:10px 0" onclick="validerMoi()">Confirmer Envoi à moi-même</button>
+<button style="width:100%;padding:10px;border:none;background:#eee;border-radius:10px" onclick="closeAll()">Annuler</button>
+</div></div>
+
+<!-- MODAL FACTURE -->
+<div id="factureModal" class="modal" onclick="this.style.display='none'"><div class="modalBox" onclick="event.stopPropagation()">
+<h3>Payer Facture avec Pi</h3><select id="type"><option>NIGELEC</option><option>SEEN</option><option>Canal+</option></select><input id="num" placeholder="Numéro compteur"><input id="montant" type="number" placeholder="Montant XOF"><p style="font-size:12px">Tu paieras: <b id="piCalc">0 Pi</b></p><button class="btn" style="width:100%" onclick="payerPi()">Confirmer Paiement Pi</button><button style="width:100%;padding:10px;border:none;background:#eee;border-radius:10px;margin-top:8px" onclick="closeAll()">Annuler</button></div></div>
+
+<!-- MODAL COMPTE A COMPTE -->
+<div id="compteModal" class="modal" onclick="this.style.display='none'"><div class="modalBox" onclick="event.stopPropagation()">
+<h3>Compte à compte</h3><input placeholder="Numéro destinataire +227..."><input type="number" placeholder="Montant XOF"><button class="btn" style="width:100%" onclick="alert('Transfert envoyé ! (démo)') ; closeAll()">Envoyer</button><button style="width:100%;padding:10px;border:none;background:#eee;border-radius:10px;margin-top:8px" onclick="closeAll()">Annuler</button></div></div>
+
+<div class="nav"><div style="color:#C62828">🏠<br>Accueil</div><div onclick="location.href='menu.html'">🕒<br>Historique</div><div>💳<br>Visa</div><div>🔒<br>Coffre</div><div onclick="location.href='profile.html'">👤<br>Profile</div></div>
+
+<script>
+function openModal(id){document.getElementById(id).style.display='flex'}
+function closeAll(){document.querySelectorAll('.modal').forEach(m=>m.style.display='none')}
+document.getElementById('montant').addEventListener('input',function(){document.getElementById('piCalc').innerText=(this.value/32000).toFixed(4)+' Pi'})
+document.getElementById('montantMoi').addEventListener('input',function(){document.getElementById('piMoi').innerText=(this.value/32000).toFixed(4)+' Pi'})
+function validerMoi(){
+ let m=document.getElementById('montantMoi').value; if(!m){alert('Entre montant');return}
+ let de=document.getElementById('de').value; let vers=document.getElementById('vers').value;
+ alert('✅ Succès ! '+m+' XOF ('+(m/32000).toFixed(2)+' Pi) envoyé de '+de+' vers '+vers+'\n\nReçu: STALI-'+Date.now().toString().slice(-6)+'\nSolde Coffre mis à jour');
+ closeAll();
+}
+function payerPi(){
+ let m=document.getElementById('montant').value; if(!m){alert('Entre montant');return}
+ alert('✅ Facture '+document.getElementById('type').value+' '+document.getElementById('num').value+' payée: '+m+' XOF = '+(m/32000).toFixed(4)+' Pi\nMode démo - Dans Pi Browser ce sera vrai paiement Pi');
+ closeAll();
+}
+</script>
+</body>
+                    </html>
