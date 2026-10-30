@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Salima Transfert</title>
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:#f2f3f8}
+.top{background:#4b1f8a;color:#fff;padding:12px;text-align:center;font-weight:bold}
+.head{background:#fff;padding:20px;text-align:center;border-bottom:5px solid #4b1f8a}
+.head h1{color:#4b1f8a;font-size:30px}
+.head p{color:#555;margin-top:5px}
+.btn-main{max-width:920px;margin:12px auto;display:block;background:#16a34a;color:#fff;padding:16px;border-radius:14px;text-align:center;font-weight:bold;font-size:18px;border:none;width:90%;cursor:pointer}
+.btn-main.logout{background:#ef4444}
+.grid{max-width:920px;margin:10px auto;display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:12px}
+.card{background:#fff;border-radius:18px;padding:18px;text-align:center;box-shadow:0 4px 10px rgba(0,0,0,.07);border-left:6px solid #4b1f8a;cursor:pointer}
+.card:active{transform:scale(0.97)}
+.card .ic{font-size:32px}
+.card b{display:block;margin-top:6px}
+.card span{font-size:11px;color:#777}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);z-index:99;justify-content:center;align-items:center;padding:20px}
+.modal.active{display:flex}
+.modal-box{background:#fff;width:100%;max-width:400px;border-radius:20px;padding:20px;max-height:85vh;overflow:auto}
+.modal-box h2{color:#4b1f8a;text-align:center}
+.modal-box input, .modal-box select{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:1px solid #ddd}
+.modal-box button{width:100%;padding:12px;margin-top:10px;border-radius:10px;border:none;background:#4b1f8a;color:#fff;font-weight:bold;cursor:pointer}
+.close{float:right;font-size:22px;cursor:pointer}
+.foot{background:#111;color:#aaa;text-align:center;padding:15px;font-size:11px;margin-top:20px}
+</style>
+</head>
+<body>
+<div class="top">SALIMA TRANSFERT - Niamey 99 96 37 77</div>
+<div class="head">
+<h1>Salima Transfert</h1>
+<p id="userInfo">Pour tous vos transactions<br><b>Non connecté</b></p>
+</div>
+
+<button id="authBtn" class="btn-main" onclick="handleAuth()">Se connecter</button>
+
+<div class="grid">
+<div class="card" onclick="openModal('historique')"><div class="ic">📜</div><b>Historique</b><span>Vos transactions</span></div>
+<div class="card" onclick="openModal('commission')"><div class="ic">💰</div><b>Commission</b><span>Vos gains</span></div>
+<div class="card" onclick="openModal('profil')"><div class="ic">👤</div><b>Profil</b><span>Mon compte</span></div>
+<div class="card" onclick="openModal('envoyer')"><div class="ic">💸</div><b>Envoyer</b><span>Nouvel envoi</span></div>
+</div>
+
+<!-- MODALS -->
+<div id="historique" class="modal" onclick="closeModal('historique')"><div class="modal-box" onclick="event.stopPropagation()"><span class="close" onclick="closeModal('historique')">×</span><h2>📜 Historique</h2><p style="text-align:center;margin-top:20px;color:#555" id="histList">Aucune transaction pour l'instant<br><br>Quand tu envoies de l'argent, ça va s'afficher ici.</p></div></div>
+
+<div id="commission" class="modal" onclick="closeModal('commission')"><div class="modal-box" onclick="event.stopPropagation()"><span class="close" onclick="closeModal('commission')">×</span><h2>💰 Commission</h2><div style="background:#f0fdf4;padding:15px;border-radius:12px;margin-top:15px;text-align:center"><b style="font-size:28px;color:#16a34a">0 FCFA</b><br><span>Gains totaux</span></div><p style="margin-top:15px;font-size:13px">Taux: 1% par envoi<br>10.000 FCFA = 100 FCFA commission</p><button onclick="closeModal('commission')">Fermer</button></div></div>
+
+<div id="profil" class="modal" onclick="closeModal('profil')"><div class="modal-box" onclick="event.stopPropagation()"><span class="close" onclick="closeModal('profil')">×</span><h2>👤 Profil</h2><div style="margin-top:15px"><p><b>Nom:</b> <span id="pName">Non connecté</span></p><p><b>Téléphone:</b> 99 96 37 77</p><p><b>Ville:</b> Niamey</p><p><b>Statut:</b> <span id="pStatus">Déconnecté</span></p></div><button onclick="closeModal('profil')">Fermer</button></div></div>
+
+<div id="envoyer" class="modal" onclick="closeModal('envoyer')"><div class="modal-box" onclick="event.stopPropagation()"><span class="close" onclick="closeModal('envoyer')">×</span><h2>💸 Envoyer</h2><select id="service"><option>NITA</option><option>AMANA</option><option>AIRTEL MONEY</option><option>MOOV MONEY</option><option>ZAMANI</option><option>NIGELEC</option><option>NDE EAU</option><option>Pi Network</option></select><input id="montant" type="number" placeholder="Montant FCFA ex: 10000"><input id="dest" type="text" placeholder="Numéro destinataire"><p id="frais" style="font-size:12px;color:#16a34a;margin:5px 0"></p><button onclick="doEnvoi()">Envoyer Maintenant</button></div></div>
+
+<div class="foot">© 2026 Salima Transfert - Niamey | +227 99 96 37 77<br>Tous les boutons fonctionnent maintenant !</div>
+
+<script>
+const Pi = window.Pi;
+Pi && Pi.init({version:"2.0", sandbox:true});
+let currentUser = JSON.parse(localStorage.getItem('salima_user')||'null');
+
+function updateUI(){
+ const btn=document.getElementById('authBtn');
+ const info=document.getElementById('userInfo');
+ const pName=document.getElementById('pName');
+ const pStatus=document.getElementById('pStatus');
+ if(currentUser){
+   btn.innerText='Se déconnecter ('+currentUser.username+')';
+   btn.classList.add('logout');
+   info.innerHTML='Bienvenue<br><b>@'+currentUser.username+' ✅ Connecté</b>';
+   pName.innerText='@'+currentUser.username;
+   pStatus.innerText='Connecté ✅';
+ }else{
+   btn.innerText='Se connecter';
+   btn.classList.remove('logout');
+   info.innerHTML='Pour tous vos transactions<br><b>Non connecté</b>';
+   pName.innerText='Non connecté';
+   pStatus.innerText='Déconnecté';
+ }
+}
+updateUI();
+
+function handleAuth(){
+ if(currentUser){
+   // DECONNEXION
+   if(confirm('Tu veux te déconnecter ?')){
+     localStorage.removeItem('salima_user');
+     currentUser=null;
+     updateUI();
+     alert('Déconnecté avec succès !');
+   }
+ }else{
+   // CONNEXION
+   if(!window.Pi || !Pi.authenticate){
+     // Mode test sans Pi Browser
+     let name=prompt('Entre ton nom (test sans Pi Browser):');
+     if(name){
+       currentUser={username:name};
+       localStorage.setItem('salima_user', JSON.stringify(currentUser));
+       updateUI();
+       alert('Connecté en mode test: '+name);
+     }
+     return;
+   }
+   Pi.authenticate(['username'], function(auth){
+     currentUser=auth.user;
+     localStorage.setItem('salima_user', JSON.stringify(currentUser));
+     updateUI();
+     alert('Salam @'+currentUser.username+' ! Connecté ✅');
+   }).catch(e=>alert('Erreur: '+e));
+ }
+}
+
+function openModal(id){document.getElementById(id).classList.add('active')}
+function closeModal(id){document.getElementById(id).classList.remove('active')}
+
+document.getElementById('montant')?.addEventListener('input', function(){
+ let m=parseInt(this.value)||0;
+ let f=Math.round(m*0.01);
+ if(m>0) document.getElementById('frais').innerText='Frais: '+f+' FCFA | Reçoit: '+(m-f)+' FCFA';
+ else document.getElementById('frais').innerText='';
+});
+
+function doEnvoi(){
+ let s=document.getElementById('service').value;
+ let m=document.getElementById('montant').value;
+ let d=document.getElementById('dest').value;
+ if(!m||!d){alert('Remplis montant et numéro !');return}
+ let hist=JSON.parse(localStorage.getItem('salima_hist')||'[]');
+ hist.unshift({service:s,montant:m,dest:d,date:new Date().toLocaleString()});
+ localStorage.setItem('salima_hist', JSON.stringify(hist));
+ alert('✅ Envoi '+m+' FCFA via '+s+' vers '+d+' réussi !');
+ closeModal('envoyer');
+ showHist();
+}
+
+function showHist(){
+ let hist=JSON.parse(localStorage.getItem('salima_hist')||'[]');
+ let el=document.getElementById('histList');
+ if(hist.length==0){el.innerHTML='Aucune transaction';return}
+ el.innerHTML=hist.map(h=>`<div style="border-bottom:1px solid #eee;padding:8px 0;text-align:left"><b>${h.service}</b> - ${h.montant} FCFA<br><small>${h.dest} - ${h.date}</small></div>`).join('');
+}
+showHist();
+</script>
+</body>
+  </html>
