@@ -1,0 +1,35 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><title>SALIMA V5 COMPLETE + PI</title>
+<script src="https://sdk.minepi.io/pi-sdk.js"></script>
+<style>
+:root{--lime:#b8ff00;--pi:#8a2be2;--black:#0a0a0a}
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,Segoe UI}
+body{background:#f7ffe8}
+.wrap{max-width:480px;margin:0 auto;min-height:100vh;background:#f7ffe8;padding-bottom:85px}
+.page{display:none}.page.on{display:block}
+/* 1. LOGO FLOTTANT */
+.splash{position:fixed;inset:0;background:#000;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;animation:hideSplash 1s 2.5s forwards}
+@keyframes float{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-15px) scale(1.05)}} 
+@keyframes hideSplash{to{opacity:0;visibility:hidden}}
+.logoFloat{width:110px;height:110px;background:var(--lime);border-radius:28px;display:flex;align-items:center;justify-content:center;font-size:58px;font-weight:900;color:#000;animation:float 2s ease-in-out infinite;box-shadow:0 20px 40px rgba(184,255,0,.5)}
+.header{background:var(--black);color:#fff;padding:14px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10}
+.btn{width:94%;margin:8px 3%;padding:16px;border-radius:14px;border:none;font-weight:900;font-size:15px;cursor:pointer}
+.lime{background:var(--lime);color:#000}.pi{background:linear-gradient(135deg,var(--pi),#5a189a);color:#fff;border:2px solid var(--lime)}.wa{background:#25D366;color:#fff}.dark{background:#000;color:#fff}
+.inp,select{width:94%;margin:6px 3%;padding:14px;border:2px solid #d9eeb5;border-radius:12px;background:#fff;font-size:15px}
+.inp:focus{border-color:var(--lime);outline:none}
+.bal{background:linear-gradient(135deg,#000,#1a1a1a);color:#fff;margin:12px;border-radius:20px;padding:16px;border:1.5px solid var(--lime)}
+.card{background:#fff;border:1.5px solid #e6f0c8;border-radius:14px;padding:12px;text-align:center;font-weight:700}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 12px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:0 12px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;z-index:9999}.modal.on{display:flex}.sheet{background:#fff;width:100%;max-width:480px;margin:auto auto 0 auto;border-radius:24px 24px 0 0;padding:16px;max-height:85vh;overflow:auto}
+.row{padding:12px;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;cursor:pointer}
+.ok{background:#e8ffcc;border:2px solid var(--lime);padding:10px;border-radius:12px;margin:8px 3%;display:none;font-weight:700}
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);max-width:480px;width:100%;background:#fff;border-top:2px solid #000;display:flex;justify-content:space-around;padding:8px 0;font-size:11px;font-weight:900;z-index:100}
+.tag{font-size:10px;background:#f3ffde;padding:3px 8px;border-radius:10px;border:1px solid #d9eeb5}
+</style></head><body>
+<!-- 1. IMAGE FLOTTANTE LOGO SALIMA VERT CITRON -->
+<div class="splash" id="splash"><div class="logoFloat">S</div><h2 style="color:#fff;margin-top:16px">SALIMA</h2><small style="color:var(--lime);margin-top:6px">TRANSFERT • Niger • Pi Network</small><small style="color:#888;margin-top:10px">ALI ABDOUL WAHAB - 99963777</small></div>
+
+<div class="wrap">
+<!-- 2. CONNECTÉ AVEC NUMÉRO + MOT DE PASSE -->
+<div id="p-login" class="page on">
+<div style="background:#000;padding:20px;text-align:center"><div style="width:80px;height:80px;background:var(--lime);border
