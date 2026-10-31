@@ -1,0 +1,73 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SALIMA V5.1</title>
+<style>
+:root{--lime:#b8ff00;--pi:#8a2be2}*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}
+body{background:#f7ffe8}.wrap{max-width:480px;margin:0 auto;background:#f7ffe8;min-height:100vh;padding-bottom:80px}
+.page{display:block}.splash{position:fixed;inset:0;background:#000;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.logo{width:110px;height:110px;background:var(--lime);border-radius:28px;display:flex;align-items:center;justify-content:center;font-size:60px;font-weight:900;color:#000;animation:f 2s infinite}
+@keyframes f{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.btn{width:94%;margin:7px 3%;padding:15px;border-radius:14px;border:none;font-weight:900;font-size:15px}
+.lime{background:var(--lime)}.pi{background:var(--pi);color:#fff}.wa{background:#25D366;color:#fff}.dark{background:#000;color:#fff}
+.inp{width:94%;margin:5px 3%;padding:13px;border:2px solid #cde99a;border-radius:12px;background:#fff}
+.bal{background:#000;color:#fff;margin:10px;border-radius:18px;padding:14px;border:1.5px solid var(--lime)}
+.card{background:#fff;border:1.5px solid #e0e0e0;border-radius:12px;padding:10px;text-align:center;font-weight:700;font-size:13px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:0 10px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;padding:0 10px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;z-index:99999}.modal.on{display:flex}.sheet{background:#fff;width:100%;max-width:480px;margin:auto auto 0 auto;border-radius:20px 20px 0 0;padding:14px;max-height:85vh;overflow:auto}
+.row{padding:11px;border-bottom:1px solid #eee;cursor:pointer}
+.ok{background:#e1ffb0;padding:10px;border-radius:10px;margin:8px 3%;display:none;font-weight:700}
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);max-width:480px;width:100%;background:#fff;border-top:2px solid #000;display:flex;justify-content:space-around;padding:8px 0;font-size:11px;font-weight:900}
+</style></head><body>
+<div class="splash" id="sp"><div class="logo">S</div><h2 style="color:#fff;margin-top:12px">SALIMA</h2><small style="color:var(--lime)">Vert citron • Pi Network</small><small style="color:#fff;margin-top:8px">Chargement...</small></div>
+<div class="wrap">
+<div id="login">
+<div style="background:#000;padding:18px;text-align:center"><div style="width:70px;height:70px;background:var(--lime);border-radius:16px;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:900">S</div><div style="color:#fff;margin-top:8px;font-weight:900">Connecté avec votre numéro</div><small style="color:var(--lime)">Sécurisé par Pi Network</small></div>
+<div style="padding:10px">
+<label style="font-size:11px;font-weight:900">PAYS / INDICATIF - Tous les pays du monde</label>
+<input id="pays" class="inp" value="🇳🇪 NIGER (+227)" readonly onclick="openM('mPays')">
+<label style="font-size:11px;font-weight:900">VILLE / VILLAGE DU NIGER</label>
+<input id="ville" class="inp" value="📍 NIAMEY - Niamey" readonly onclick="openM('mVille')" style="border-color:var(--pi)">
+<input id="tel" class="inp" value="99963777">
+<input id="pwd" type="password" class="inp" value="1234">
+<button class="btn lime" onclick="goHome()">Se connecter 📱</button>
+<button class="btn pi" onclick="goPi()">🟣 Connecté Yor Pi Wallet - 1250 Pi</button>
+<button class="btn wa" onclick="goWa()">💬 WhatsApp 99963777</button>
+<div id="msg1" class="ok"></div>
+</div>
+</div>
+
+<div id="home" style="display:none">
+<div style="background:#000;color:#fff;padding:12px;display:flex;justify-content:space-between"><b>SALIMA V5.1</b><b onclick="toggleS()" style="cursor:pointer">👁️ <span id="eye">Caché</span></b></div>
+<div class="bal"><small>ALI ABDOUL WAHAB • @aliwahab080 • Profil client</small><div style="font-size:28px;font-weight:900;margin-top:4px"><span id="solde">••••••</span> FCFA • <span style="color:#d0a0ff">1250 Pi</span></div></div>
+
+<div style="margin:10px;background:#f3e8ff;border:2px solid var(--pi);border-radius:14px;padding:10px"><b>🟣 Système Pi - Ajouté seulement</b><div class="grid3" style="margin-top:8px"><div class="card" onclick="piConv('SALIMA 2%')">Pi→Salima 2%<br>1Pi=6500F</div><div class="card" onclick="piConv('NITA 3%')">Pi→NITA 3%</div><div class="card" onclick="piConv('AMANA 3.5%')">Pi→Amana 3.5%</div></div></div>
+
+<div style="margin:10px;background:#fff;border-radius:14px;padding:10px;border:1px solid var(--lime)"><b>Envoi Salima / Nita / Amana + Banque + Réseau + Factures</b><div class="grid3" style="margin-top:8px"><div class="card">Salima→Nita</div><div class="card">Nita→Amana</div><div class="card">Amana→Salima</div><div class="card">🏦 BOA</div><div class="card">💳 VISA</div><div class="card">💳 Salima</div><div class="card">📱 Airtel</div><div class="card">📱 Moov</div><div class="card">📱 Orange</div><div class="card">💡 NIGELEC</div><div class="card">💧 SEEN</div><div class="card">📺 Canal+</div></div><button class="btn dark" onclick="showLogin()">← Retour</button></div>
+<div id="msg2" class="ok"></div>
+</div>
+</div>
+
+<div id="mPays" class="modal" onclick="closeM('mPays')"><div class="sheet" onclick="event.stopPropagation()"><h3>🌍 Tous les pays</h3><input id="sPays" class="inp" placeholder="Chercher..." oninput="drawPays()"><div id="lPays" style="max-height:60vh;overflow:auto"></div><button class="btn lime" onclick="closeM('mPays')">Fermer</button></div></div>
+<div id="mVille" class="modal" onclick="closeM('mVille')"><div class="sheet" onclick="event.stopPropagation()"><h3>📍 Niger Villes & Villages</h3><input id="sVille" class="inp" placeholder="Niamey, Zinder..." oninput="drawVille()"><div id="lVille" style="max-height:60vh;overflow:auto"></div><button class="btn lime" onclick="closeM('mVille')">Fermer</button></div></div>
+<div class="nav"><div onclick="goHome()">🏠 Accueil</div><div onclick="openM('mVille')">📍 Villes</div><div onclick="goPi()">🟣 Pi</div><div onclick="goWa()">💬 WA</div><div onclick="showLogin()">👤 Profil</div></div>
+
+<script>
+var PAYS=[["🇳🇪 NIGER","+227"],["🇧🇯 BENIN","+229"],["🇧🇫 BURKINA","+226"],["🇲🇱 MALI","+223"],["🇳🇬 NIGERIA","+234"],["🇸🇳 SENEGAL","+221"],["🇨🇮 COTE D'IVOIRE","+225"],["🇫🇷 FRANCE","+33"],["🇺🇸 USA","+1"],["🇬🇧 UK","+44"],["🇸🇦 ARABIE","+966"],["🇦🇪 EMIRATS","+971"],["🇲🇦 MAROC","+212"],["🇩🇿 ALGERIE","+213"]];
+var VILLES=[["NIAMEY","Niamey C1"],["NIAMEY","Niamey C2"],["NIAMEY","Niamey C3"],["NIAMEY","Goudel"],["NIAMEY","Yantala"],["TILLABERI","Tillaberi"],["TILLABERI","Ouallam"],["DOSSO","Dosso"],["DOSSO","Gaya"],["TAHOUA","Tahoua"],["TAHOUA","Birni Nkonni"],["MARADI","Maradi"],["MARADI","Tessaoua"],["ZINDER","Zinder"],["ZINDER","Magaria"],["AGADEZ","Agadez"],["AGADEZ","Arlit"],["AGADEZ","Bilma"],["DIFFA","Diffa"]];
+function $(id){return document.getElementById(id)}
+function openM(id){$(id).classList.add('on')}function closeM(id){$(id).classList.remove('on')}
+function msg(id,t){var e=$(id);e.style.display='block';e.innerText=t;setTimeout(function(){e.style.display='none'},3000)}
+function goHome(){$('login').style.display='none';$('home').style.display='block';msg('msg2','✅ Connecté ALI 99963777 - '+$('ville').value)}
+function showLogin(){$('home').style.display='none';$('login').style.display='block'}
+function goPi(){msg('msg1','🟣 Pi Wallet 1250 Pi connecté - 1Pi=6500F - SALIMA 2% NITA 3% AMANA 3.5% ✅');setTimeout(goHome,800)}
+function goWa(){window.open('https://wa.me/22799963777?text=Salam%20Salima%20V5.1','_blank')}
+function piConv(t){msg('msg2','🟣 Conversion '+t+' - 1250 Pi = 8 125 000 F - Calcul fait ✅')}
+var sol=false;function toggleS(){sol=!sol;$('solde').innerText=sol?'2 540 000':'••••••';$('eye').innerText=sol?'Visible':'Caché'}
+function drawPays(){var q=($('sPays').value||'').toUpperCase();var f=PAYS.filter(function(p){return p[0].includes(q)||p[1].includes(q)});$('lPays').innerHTML=f.map(function(p){return "<div class='row' onclick=\"pickPays('"+p[0]+" ("+p[1]+")')\"><span>"+p[0]+"</span><b>"+p[1]+"</b></div>"}).join('')}
+function pickPays(v){$('pays').value=v;closeM('mPays')}
+function drawVille(){var q=($('sVille').value||'').toUpperCase();var f=VILLES.filter(function(v){return v[1].toUpperCase().indexOf(q)>-1||v[0].indexOf(q)>-1});$('lVille').innerHTML=f.map(function(v){return "<div class='row' onclick=\"pickVille('"+v[1]+"','"+v[0]+"')\">📍 "+v[1]+" <small style='float:right;background:#f3ffde;padding:2px 8px;border-radius:10px'>"+v[0]+"</small></div>"}).join('')}
+function pickVille(ville,reg){$('ville').value='📍 '+ville+' - '+reg;closeM('mVille');msg('msg1','📍 Ville: '+ville+' ✅')}
+drawPays();drawVille();
+// cache le splash après 2 sec
+setTimeout(function(){var s=$('sp');if(s)s.style.display='none'},2000);
+console.log('V5.1 OK');
+</script></body></html>
