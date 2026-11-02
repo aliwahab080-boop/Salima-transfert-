@@ -1,0 +1,14 @@
+{
+  "name": "Salima Transfert - Wallet Officiel",
+  "short_name": "Salima Wallet",
+  "version": "14.0.0",
+  "description": "Wallet Officiel Niger - Code Secret - 5 Langues - Pi Network",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#7ab800",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
