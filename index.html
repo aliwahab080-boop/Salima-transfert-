@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Salima Transfert V6</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#7ab800">
+<style>
+*{box-sizing:border-box;font-family:system-ui}
+body{margin:0;background:#000;color:#fff;padding-bottom:80px}
+.header{text-align:center;padding:25px 10px 10px}
+.logo{width:90px;height:90px;background:#7ab800;border-radius:22px;display:inline-flex;align-items:center;justify-content:center;font-size:48px;font-weight:900;color:#000}
+h1{font-size:18px;color:#999;margin:8px 0}
+.sub{color:#7ab800;font-size:14px}
+.card{background:#111;border:1px solid #222;border-radius:16px;margin:14px;padding:16px}
+label{font-size:12px;color:#888;display:block;margin:0 0 6px 4px}
+select,input{width:100%;padding:14px;border-radius:12px;border:1px solid #333;background:#000;color:#fff;font-size:16px;margin-bottom:12px}
+.btn{width:100%;padding:16px;border-radius:12px;border:0;background:#7ab800;color:#000;font-weight:800;font-size:16px;cursor:pointer}
+.btn2{background:#222;color:#fff;border:1px solid #333}
+.ok{margin-top:10px;padding:12px;border-radius:10px;background:#0a2a00;color:#7ab800;display:none;font-size:14px}
+.small{font-size:11px;color:#555;text-align:center;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="header">
+<div class="logo">S</div>
+<h1>Connecté avec votre numéro</h1>
+<div class="sub">Sécurisé par Pi Network • V6 Installable + Banque</div>
+</div>
+
+<div class="card">
+<label>PAYS / INDICATIF</label>
+<select id="country"><option>🇳🇪 NIGER (+227)</option><option>🇧🇯 BENIN (+229)</option><option>🇧🇫 BURKINA (+226)</option><option>🇲🇱 MALI (+223)</option><option>🇳🇬 NIGERIA (+234)</option><option>🇫🇷 FRANCE (+33)</option></select>
+<label>VILLE / VILLAGE DU NIGER</label>
+<select id="ville"><option>📍 NIAMEY - Niamey</option><option>📍 ZINDER - Zinder</option><option>📍 MARADI - Maradi</option><option>📍 TAHOUA - Tahoua</option></select>
+<input id="num" placeholder="Ex: 99963777" value="99963777">
+<input id="pin" type="password" placeholder="Code PIN" value="....">
+<button class="btn" onclick="document.getElementById('msg1').style.display='block';document.getElementById('msg1').innerText='✅ Connecté';">Se connecter</button>
+<div id="msg1" class="ok"></div>
+</div>
+
+<div class="card">
+<b style="color:#7ab800">🏦 Envoyer vers BANQUE / VISA / MasterCard</b>
+<p style="font-size:12px;color:#888">BOA Niger et toutes cartes Visa/MasterCard</p>
+<input id="bankName" placeholder="Banque: BOA Niger / VISA">
+<input id="accountNo" placeholder="Numéro compte ou carte">
+<input id="bankAmount" type="number" placeholder="Montant FCFA">
+<button class="btn" onclick="sendToBank()">Envoyer vers Banque 💳</button>
+<div id="bankMsg" class="ok"></div>
+</div>
+
+<div class="card">
+<b>💸 Transfert Salima Classique</b>
+<input id="dest" placeholder="Numéro destinataire">
+<input id="montant" type="number" placeholder="Montant FCFA">
+<button class="btn btn2" onclick="sendSalima()">Envoyer Salima</button>
+<div id="msg2" class="ok"></div>
+</div>
+
+<div class="small">Salima V6 • aliwahab080-boop.github.io/Salima-transfert-/</div>
+<script>
+function sendToBank(){
+  const b=document.getElementById('bankName').value;
+  const a=document.getElementById('accountNo').value;
+  const m=document.getElementById('bankAmount').value;
+  const msg=document.getElementById('bankMsg');msg.style.display='block';
+  if(!b||!a||!m){msg.innerText='❌ Remplis tout';return;}
+  msg.innerText='✅ DEMO: '+m+' FCFA prêt pour '+b+' ('+a+') - Pour envoi RÉEL, déploie le backend Render.';
+}
+function sendSalima(){
+  const d=document.getElementById('dest').value;
+  const m=document.getElementById('montant').value;
+  const msg=document.getElementById('msg2');msg.style.display='block';
+  if(!d||!m){msg.innerText='❌ Remplis';return;}
+  msg.innerText='✅ Transfert '+m+' FCFA vers '+d+' réussi (démo)';
+}
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}
+</script>
+</body>
+</html>
