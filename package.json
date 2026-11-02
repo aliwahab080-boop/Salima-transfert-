@@ -1,0 +1,29 @@
+{
+  "name": "salima-transfert",
+  "version": "14.0.0",
+  "description": "Salima Transfert - Wallet Officiel Niger - 8 Régions - Transfert Pi Sécurisé avec Code Secret, Langues FR/EN/HAUSA/ZARMA/AR, Pays Tous, NITA Amana Airtel Moov",
+  "main": "index.html",
+  "author": "ALI WAHAB - 99963777",
+  "license": "Apache-2.0",
+  "keywords": ["niger", "transfert", "salima", "pi-network", "wallet", "nita", "amana", "airtel", "moov", "pwa"],
+  "type": "module",
+  "scripts": {
+    "start": "npx serve .",
+    "build": "echo 'Salima V14 Wallet Officiel Build OK'",
+    "pack": "zip -r salima-wallet-v14-officiel.zip index.html manifest.json sw.js icon-*.png terms.html validation-key.txt package.json"
+  },
+  "dependencies": {
+    "pi-network-sdk": "^2.0.0"
+  },
+  "pwa": {
+    "name": "Salima Transfert Wallet Officiel",
+    "short_name": "Salima Wallet",
+    "theme_color": "#7ab800",
+    "background_color": "#000000",
+    "display": "standalone",
+    "icons": [
+      { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+      { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+    ]
+  }
+  }
