@@ -1,0 +1,127 @@
+<!DOCTYPE html><html lang="fr"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>SALIMA V24 PRO - TOUT EN 1</title>
+<style>
+*{box-sizing:border-box;margin:0}body{background:#000;color:#fff;font-family:system-ui}
+.h{background:linear-gradient(135deg,#7ab800,#5a8a00);color:#000;padding:18px;position:sticky;top:0;z-index:20}
+.s{font-size:36px;font-weight:900}.pill{display:inline-block;background:rgba(0,0,0,.2);padding:4px 10px;border-radius:20px;font-size:11px;font-weight:800;margin-right:6px}
+.card{background:#111;border:1px solid #222;border-radius:20px;margin:12px;padding:16px}
+.g{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.b{background:#1a1a1a;border:1px solid #333;border-radius:16px;padding:18px;text-align:center;font-weight:700;cursor:pointer}
+.b:active{transform:scale(.97)}.b.green{border-color:#7ab800;color:#7ab800}
+.btn{width:100%;background:#7ab800;border:0;padding:14px;border-radius:12px;font-weight:900;color:#000;margin-top:8px}
+.btn2{width:100%;background:#222;color:#fff;border:1px solid #444;padding:12px;border-radius:12px;margin-top:8px}
+/* RECEIPT PRO */
+#receiptView{display:none;position:fixed;inset:0;background:#000;z-index:300;overflow:auto;padding:10px}
+#receiptView.on{display:block}.wrap{max-width:400px;margin:0 auto;background:#0a1f0a;border:2px solid #1a4a1a;border-radius:24px;padding:10px}
+.topOk{background:#c8f5c8;color:#0a3a0a;border-radius:16px;padding:12px 16px;display:flex;gap:12px;align-items:center}
+.check{background:#158a15;color:#fff;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-size:24px}
+.mainRec{background:#0f0f0f;border-radius:18px;padding:16px;margin-top:10px}
+.row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #222;font-size:13px}.row span:last-child{color:#fff;font-weight:600}
+.totalRow{display:flex;justify-content:space-between;padding:14px 0;font-weight:900}.totalRow span:last-child{color:#4ade80;font-size:22px}
+.act{background:#111;border:1px solid #2a5a2a;color:#7aff7a;border-radius:12px;padding:12px;text-align:center;font-weight:700;font-size:13px}
+#modal{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100;display:none;align-items:center;justify-content:center;padding:15px}
+#modal.on{display:flex}.m{background:#121212;border:1px solid #444;border-radius:16px;padding:16px;width:100%;max-width:360px}
+.m input{width:100%;padding:12px;border-radius:10px;border:1px solid #333;background:#000;color:#fff;margin:6px 0}
+.tabs{display:flex;gap:8px;margin-bottom:12px}.tab{flex:1;padding:10px;border-radius:10px;text-align:center;background:#1a1a1a;border:1px solid #333;font-weight:800;font-size:13px}.tab.on{background:#7ab800;color:#000;border-color:#7ab800}
+</style>
+</head><body>
+<div class="h"><small style="font-weight:800;opacity:.7">SOLDE DISPONIBLE</small><div class="s" id="solde">250 000 FCFA</div>
+<div style="margin-top:6px"><span class="pill">● Pi: Connecté</span><span class="pill">V24 PRO</span><span class="pill" id="nbT">0 transac</span><span class="pill" id="revPill" style="background:#000;color:#7ab800">0 F bénéf</span></div></div>
+
+<div class="card">
+<div class="tabs"><div class="tab on" id="tabW" onclick="switchTab('wallet')">🏠 Wallet</div><div class="tab" id="tabR" onclick="switchTab('revenus')">📊 Revenus Option C</div></div>
+<div id="viewWallet">
+<div class="g">
+<div class="b" onclick="openS('Salima')">Salima</div><div class="b" onclick="openS('NITA')">NITA</div>
+<div class="b" onclick="openS('Amana')">Amana</div><div class="b" onclick="openS('Orange Money')">Orange</div>
+<div class="b" onclick="openS('Airtel Money')">Airtel</div><div class="b" onclick="openS('Moov Money')">Moov</div>
+<div class="b" onclick="openS('NIGELEC')">NIGELEC</div><div class="b green" onclick="openS('Encaisser')">Encaisser +</div>
+</div>
+<div style="margin-top:14px"><b>Derniers reçus</b><div id="list" style="margin-top:8px"></div></div>
+</div>
+<div id="viewRevenus" style="display:none">
+<div style="background:#0f1a00;border:1px solid #2a4a00;border-radius:16px;padding:16px;text-align:center"><small>Bénéfice total Option C (20%)</small><div style="font-size:34px;font-weight:900;color:#7ab800" id="bTotal">0 FCFA</div><small id="nTotal">0 transactions</small></div>
+<div id="listRev" style="margin-top:12px"></div>
+<button class="btn2" onclick="exportCSV()">📤 Exporter CSV</button>
+</div>
+<button class="btn2" onclick="clearAll()">🗑️ Reset 250k</button>
+</div>
+
+<div id="modal"><div class="m"><b id="mTitle">Service</b><br><br>
+Nom bénéficiaire<input id="nom" placeholder="Amadou Diop">
+Numéro<input id="num" placeholder="+227 90 12 34 56">
+Montant FCFA<input id="mont" type="number" placeholder="50000">
+<div id="calc" style="background:#0f1a00;border-radius:8px;padding:8px;margin:6px 0;font-size:12px"></div>
+<div style="display:flex;gap:8px"><button class="btn" style="background:#333;color:#fff;flex:1" onclick="closeM()">Annuler</button><button class="btn" style="flex:1.5" onclick="doTrans()">VALIDER</button></div>
+</div></div>
+
+<div id="receiptView">
+<div class="wrap">
+<div class="topOk"><div class="check">✓</div><div><div style="font-weight:900">Receipt confirmed</div><div style="font-size:13px">Receipt added successfully</div></div></div>
+<div class="mainRec">
+<div style="display:flex;justify-content:space-between"><h2 style="font-size:18px">Transaction Receipt</h2><span style="background:#0f3a0f;color:#7aff7a;border-radius:20px;padding:4px 10px;font-size:12px">Completed ●</span></div>
+<div style="text-align:center;color:#4ade80;font-size:32px;font-weight:900;margin:10px 0 2px" id="rAmount">50,000 FCFA</div>
+<div style="text-align:center;opacity:.6;font-size:12px;margin-bottom:10px">Amount sent</div>
+<div class="row"><span>Recipient</span><span id="rName">Amadou Diop</span></div>
+<div class="row"><span>Phone Number</span><span id="rPhone">+221 77 123 45 67</span></div>
+<div class="row"><span>Transaction ID</span><span id="rId">SLM-3849201</span></div>
+<div class="row"><span>Date & Time</span><span id="rDate">02 Nov 2024 • 14:32</span></div>
+<div class="row"><span>Payment Method</span><span id="rMethod">Mobile Money • Orange Money</span></div>
+<div class="row"><span>Amount</span><span id="rAmount2">50,000 FCFA</span></div>
+<div class="row"><span>Service Fee (20%)</span><span id="rFee">500 FCFA</span></div>
+<div class="totalRow"><span>Total Paid</span><span id="rTotal">50,500 FCFA</span></div>
+<div style="font-size:11px;opacity:.5;margin-top:6px">ⓘ Funds have been sent. SMS notification shortly.</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px"><div class="act" onclick="downloadRecu()">⬇ Download Receipt</div><div class="act" style="background:#7ab800;color:#000;border:0" onclick="shareRecu()">↗ Share Receipt</div></div>
+<button style="width:100%;margin-top:10px;background:#000;border:1px solid #333;color:#4ade80;padding:14px;border-radius:12px;font-weight:800" onclick="closeReceipt()">↗ Done</button>
+</div>
+</div>
+</div>
+
+<script>
+let solde=parseInt(localStorage.getItem('sal_v24_solde')||'250000');let cur='';let lastRec=null;
+function switchTab(t){
+document.getElementById('viewWallet').style.display=t==='wallet'?'block':'none';
+document.getElementById('viewRevenus').style.display=t==='revenus'?'block':'none';
+document.getElementById('tabW').classList.toggle('on',t==='wallet');
+document.getElementById('tabR').classList.toggle('on',t==='revenus');
+if(t==='revenus')loadRev();
+}
+function refresh(){document.getElementById('solde').innerText=solde.toLocaleString('fr-FR')+' FCFA';localStorage.setItem('sal_v24_solde',solde);load();loadRev();}
+function openS(n){cur=n;document.getElementById('mTitle').innerText=n;document.getElementById('modal').classList.add('on');}
+function closeM(){document.getElementById('modal').classList.remove('on');}
+document.getElementById('mont').addEventListener('input',()=>{
+let m=parseInt(document.getElementById('mont').value)||0;let f=Math.round(m*0.2);
+document.getElementById('calc').innerHTML=m?`Montant: ${m.toLocaleString()} F<br>Ta part 20%: <b style="color:#7ab800">${f.toLocaleString()} F</b><br>Client paie: ${(m+f).toLocaleString()} F`:'Mets montant pour voir bénéfice';
+});
+function doTrans(){
+let nom=document.getElementById('nom').value.trim()||'Client';let num=document.getElementById('num').value.trim();let m=parseInt(document.getElementById('mont').value);
+if(!num||!m)return alert('Numéro + Montant');if(cur!=='Encaisser'&&m>solde)return alert('Solde insuffisant');
+let fee=Math.round(m*0.2);let total=m+fee;let id='SLM-'+Math.floor(1000000+Math.random()*8999999);
+if(cur!=='Encaisser')solde-=total;else{solde+=m;fee=0;total=m;}
+let now=new Date();let dateStr=now.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+' • '+now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+let rec={id:id,name:nom,phone:num,amount:m,fee:fee,total:total,method:cur,dateStr:dateStr,iso:now.toISOString(),benef:cur==='Encaisser'?0:fee};
+lastRec=rec;let arr=JSON.parse(localStorage.getItem('sal_v24_recus')||'[]');arr.unshift(rec);localStorage.setItem('sal_v24_recus',JSON.stringify(arr));
+refresh();closeM();showReceipt(rec);
+document.getElementById('nom').value='';document.getElementById('num').value='';document.getElementById('mont').value='';
+}
+function showReceipt(r){
+document.getElementById('rAmount').innerText=r.amount.toLocaleString()+' FCFA';
+document.getElementById('rName').innerText=r.name;document.getElementById('rPhone').innerText=r.phone;
+document.getElementById('rId').innerText=r.id;document.getElementById('rDate').innerText=r.dateStr;
+document.getElementById('rMethod').innerText='Mobile Money • '+r.method;
+document.getElementById('rAmount2').innerText=r.amount.toLocaleString()+' FCFA';
+document.getElementById('rFee').innerText=r.fee.toLocaleString()+' FCFA';
+document.getElementById('rTotal').innerText=r.total.toLocaleString()+' FCFA';
+document.getElementById('receiptView').classList.add('on');
+}
+function closeReceipt(){document.getElementById('receiptView').classList.remove('on');}
+function load(){let arr=JSON.parse(localStorage.getItem('sal_v24_recus')||'[]');let z=document.getElementById('list');if(!arr.length){z.innerHTML='<small style="opacity:.5">Aucun reçu</small>';}else{z.innerHTML=arr.slice(0,6).map(r=>`<div style="background:#1a1a1a;padding:10px;border-radius:10px;margin:6px 0;font-size:12px;display:flex;justify-content:space-between" onclick='showReceipt(${JSON.stringify(r).replace(/'/g,"")})'><span>${r.name} - ${r.amount}F</span><span style="color:#7ab800">Voir</span></div>`).join('');}
+let totB=arr.reduce((a,b)=>a+(b.benef||0),0);document.getElementById('nbT').innerText=arr.length+' transac';document.getElementById('revPill').innerText=totB.toLocaleString()+' F bénéf';}
+function loadRev(){let arr=JSON.parse(localStorage.getItem('sal_v24_recus')||'[]');let tot=arr.reduce((a,b)=>a+(b.benef||0),0);document.getElementById('bTotal').innerText=tot.toLocaleString()+' FCFA';document.getElementById('nTotal').innerText=arr.length+' transactions';document.getElementById('listRev').innerHTML=arr.map(r=>`<div style="padding:10px 0;border-bottom:1px solid #222;display:flex;justify-content:space-between;font-size:13px"><span>${r.dateStr} - ${r.s}<br><small style="opacity:.6">${r.name}</small></span><b style="color:#7ab800">+${r.benef||0} F</b></div>`).join('')||'<small style="opacity:.5">Pas encore de revenus</small>';}
+function downloadRecu(){if(!lastRec)return;let txt=`SALIMA TRANSFERT\n${lastRec.id}\n${lastRec.amount} FCFA to ${lastRec.name}\n${lastRec.phone}\nTotal ${lastRec.total} FCFA`;let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt]));a.download=lastRec.id+'.txt';a.click();}
+function shareRecu(){if(!lastRec)return;let t=`Receipt ${lastRec.id}: ${lastRec.amount} FCFA to ${lastRec.name} (${lastRec.phone}) - Total ${lastRec.total} FCFA`;if(navigator.share)navigator.share({text:t});else alert(t);}
+function exportCSV(){let arr=JSON.parse(localStorage.getItem('sal_v24_recus')||'[]');if(!arr.length)return alert('Vide');let csv='Date,Service,Numero,Montant,Benef\n'+arr.map(r=>`${r.dateStr},${r.s},${r.phone},${r.amount},${r.benef}`).join('\n');let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv]));a.download='revenus.csv';a.click();}
+function clearAll(){if(confirm('Reset 250k ?')){localStorage.clear();solde=250000;refresh();}}
+refresh();
+</script></body></html>
