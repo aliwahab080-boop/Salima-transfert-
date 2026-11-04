@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SALIMA V37 PRO - Pi SDK + Profil Client</title>
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<script src="https://cdn.cinetpay.com/seamless/main.js"></script>
+<style>
+*{box-sizing:border-box;font-family:Arial,sans-serif}
+body{margin:0;background:#000;color:#fff;padding-bottom:85px}
+.top{background:#0a7a00;padding:15px}
+.top h1{font-size:16px;margin:0}
+.top h2{font-size:32px;margin:5px 0}
+.badge{display:inline-block;background:#111;padding:6px 10px;border-radius:20px;font-size:12px;margin:3px}
+.badge.green{color:#00ff88}
+.badge.pi{background:#6a00ff;color:#fff}
+.rates{background:#1a5c00;padding:8px;font-size:12px;text-align:center}
+.tabs{display:flex;justify-content:space-around;background:#111;padding:10px;position:fixed;bottom:0;left:0;right:0;z-index:99}
+.tabs div{text-align:center;font-size:12px;cursor:pointer;padding:8px 6px;border-radius:12px}
+.tabs .active{background:#a4ff00;color:#000}
+.card{background:#111;margin:12px;padding:15px;border-radius:15px}
+input,select{width:100%;padding:12px;margin:8px 0;border-radius:10px;border:none;font-size:16px}
+button{width:100%;padding:14px;background:#a4ff00;border:none;border-radius:12px;font-weight:bold;font-size:16px;cursor:pointer;margin-top:8px}
+.btn-pi{background:#6a00ff;color:#fff}
+.btn-dark{background:#222;color:#fff}
+.btn-blue{background:#007bff;color:#fff}
+.result{background:#0a7a00;padding:12px;border-radius:10px;margin-top:10px;text-align:center;font-size:18px}
+small{color:#aaa}
+.profil-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #222}
+.profil-row b{color:#a4ff00}
+.avatar{width:70px;height:70px;background:#a4ff00;color:#000;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:bold;margin:auto}
+.avatar-client{width:70px;height:70px;background:#007bff;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:bold;margin:auto}
+.pi-box{background:#1a0033;border:1px solid #6a00ff;padding:12px;border-radius:12px;margin-top:10px;text-align:center}
+.client-box{background:#001a33;border:1px solid #007bff;padding:12px;border-radius:12px;margin-top:10px}
+.switch{display:flex;gap:8px}
+.switch button{flex:1}
+.switch .active{background:#007bff;color:#fff}
+</style>
+</head>
+<body>
+
+<div class="top">
+<h1>SALIMA V37 PRO</h1>
+<h2>250 000 FCFA 👁️</h2>
+<span class="badge green">● En ligne</span>
+<span class="badge pi">◆ Pi SDK: Prêt</span>
+<span class="badge">📍 Niamey - Aéroport</span><br>
+<span class="badge">0 transac</span>
+<span class="badge" id="topClients">0 clients</span>
+</div>
+
+<div class="rates">
+1 Pi ≈ 315 000 FCFA | 1 $ ≈ 605 FCFA | 1 € ≈ 655 FCFA | 1 N ≈ 0.40 FCFA | 1 GHC ≈ 45 FCFA
+</div>
+
+<!-- PAGE WALLET -->
+<div id="page-wallet">
+<div class="card">
+🌍 TOUS PAYS | Afrique de l'Ouest | 🔥 Paiement Sécurisé<br>
+<small>Pi SDK + Mobile Money</small>
+</div>
+<div class="card">
+<h3>💸 Envoyer - Afrique de l'Ouest</h3>
+<label>Client qui envoie (choisis un client enregistré)</label>
+<select id="selectClient" onchange="remplirClient()"><option value="">-- Nouveau client / Tape le nom --</option></select>
+<label>De : Niger - FCFA</label>
+<select id="paysDest" onchange="calculer()">
+<option value="BENIN">Bénin - FCFA</option>
+<option value="TOGO">Togo - FCFA</option>
+<option value="MALI">Mali - FCFA</option>
+<option value="BURKINA">Burkina Faso - FCFA</option>
+<option value="SENEGAL">Sénégal - FCFA</option>
+<option value="COTE">Côte d'Ivoire - FCFA</option>
+<option value="GUINEE-BISSAU">Guinée-Bissau - FCFA</option>
+<option value="NIGERIA" selected>Nigeria - Naira</option>
+<option value="GHANA">Ghana - Cedi</option>
+<option value="GUINEE">Guinée Conakry - GNF</option>
+</select>
+<label>Montant à envoyer (FCFA)</label>
+<input type="number" id="montant" value="100000" oninput="calculer()">
+<label>Nom du bénéficiaire</label>
+<input type="text" id="nomClient" placeholder="Ex: Musa Ibrahim">
+<div class="result" id="resultat">Calcul...</div>
+<p style="text-align:center;font-size:13px">Frais fixe : 5.000 FCFA</p>
+<button onclick="payerAvecCinetPay()">PAYER MAINTENANT - Mobile Money</button>
+<div class="pi-box">
+<b>◆ Payer avec Pi Network</b><br>
+<small id="piStatus">Non connecté à Pi - Ouvre dans Pi Browser</small><br>
+<span id="piUser" style="color:#a4ff00"></span>
+<button class="btn-pi" onclick="connectPi()">◆ SE CONNECTER AVEC PI</button>
+<button class="btn-pi" onclick="payerAvecPi()">◆ PAYER AVEC PI</button>
+<small>1 Pi = 315 000 FCFA</small>
+</div>
+</div>
+<div class="card"><h3>Derniers reçus</h3><small id="histList">Aucun reçu pour le moment</small></div>
+</div>
+
+<!-- PAGE PAYS -->
+<div id="page-pays" style="display:none">
+<div class="card"><h3>🌍 Pays - Afrique de l'Ouest</h3>
+<p>✅ Bénin - FCFA</p><p>✅ Togo - FCFA</p><p>✅ Mali - FCFA</p><p>✅ Burkina Faso - FCFA</p><p>✅ Sénégal - FCFA</p><p>✅ Côte d'Ivoire - FCFA</p><p>✅ Guinée-Bissau - FCFA</p><p>✅ Nigeria - Naira</p><p>✅ Ghana - Cedi</p><p>✅ Guinée Conakry - GNF</p>
+</div>
+</div>
+
+<!-- PAGE PROFIL - 2 ONGLETS : MOI + CLIENT -->
+<div id="page-profil" style="display:none">
+<div class="card">
+<div class="switch">
+<button id="btnMoi" class="active" onclick="showProfilTab('moi')">👤 MON PROFIL</button>
+<button id="btnClient" onclick="showProfilTab('client')">👥 PROFIL CLIENT</button>
+</div>
+</div>
+
+<!-- MON PROFIL - TOI -->
+<div id="profil-moi">
+<div class="card" style="text-align:center">
+<div class="avatar">A</div>
+<h2>Ali Wahab</h2>
+<p>Salima Transfert - Patron</p>
+<span class="badge green">● Compte Vérifié</span>
+</div>
+<div class="card">
+<h3>👤 Mon Profil</h3>
+<div class="profil-row"><span>Nom complet</span><b>Ali Wahab</b></div>
+<div class="profil-row"><span>Entreprise</span><b>Salima Transfert</b></div>
+<div class="profil-row"><span>📞 Téléphone / WhatsApp</span><b id="affNumero">+227 99 96 37 77</b></div>
+<div class="profil-row"><span>◆ Username Pi</span><b id="affPiUser">Non connecté</b></div>
+<div class="profil-row"><span>📍 Ville</span><b>Niamey, Niger</b></div>
+<div class="profil-row"><span>📍 Quartier</span><b>Aéroport</b></div>
+<div class="profil-row"><span>🌍 Zone</span><b>Afrique de l'Ouest</b></div>
+<div class="profil-row"><span>💰 Solde</span><b>250 000 FCFA</b></div>
+</div>
+<div class="card">
+<h3>✏️ Modifier mon numéro</h3>
+<input type="tel" id="monNumero" value="+227 99 96 37 77">
+<button onclick="sauvegarderProfil()">SAUVEGARDER MON PROFIL</button>
+<a href="https://wa.me/22799963777" style="display:block;text-align:center;color:#a4ff00;margin-top:12px;text-decoration:none">📲 Me contacter sur WhatsApp</a>
+</div>
+</div>
+
+<!-- PROFIL CLIENT - NOUVEAU -->
+<div id="profil-client" style="display:none">
+<div class="card" style="text-align:center">
+<div class="avatar-client" id="avatarClient">C</div>
+<h2 id="titreClient">Nouveau Client</h2>
+<p>Client Salima Transfert</p>
+</div>
+<div class="card">
+<h3>👥 Créer / Modifier Profil Client</h3>
+<label>Nom complet du client</label>
+<input type="text" id="clientNom" placeholder="Ex: Musa Ibrahim">
+<label>📞 Téléphone du client</label>
+<input type="tel" id="clientTel" placeholder="Ex: +227 90 12 34 56">
+<label>📍 Pays d'envoi</label>
+<select id="clientPays"><option>Niger</option><option>Bénin</option><option>Togo</option><option>Mali</option><option>Burkina Faso</option><option>Sénégal</option><option>Côte d'Ivoire</option><option>Nigeria</option><option>Ghana</option><option>Guinée</option></select>
+<label>👤 Nom du bénéficiaire (qui reçoit)</label>
+<input type="text" id="clientBenef" placeholder="Ex: Aisha Musa - Lagos">
+<label>📞 Téléphone du bénéficiaire</label>
+<input type="tel" id="clientBenefTel" placeholder="Ex: +234 80 1234 5678">
+<label>◆ Username Pi du client (si il paie en Pi)</label>
+<input type="text" id="clientPi" placeholder="Ex: @musa_pi">
+<button class="btn-blue" onclick="sauvegarderClient()">💾 ENREGISTRER CE CLIENT</button>
+<button class="btn-dark" onclick="nouveauClient()">+ NOUVEAU CLIENT</button>
+</div>
+<div class="card">
+<h3>📋 Mes Clients Enregistrés</h3>
+<div id="listeClients"><small>Aucun client pour le moment. Enregistre ton 1er client en haut.</small></div>
+</div>
+</div>
+</div>
+
+<!-- PAGE CLÉS -->
+<div id="page-cles" style="display:none">
+<div class="card">
+<h3>⚙️ Clés Paiement</h3>
+<label>API KEY</label><input type="text" id="apiKey" placeholder="Ton API KEY">
+<label>SITE ID</label><input type="text" id="siteId" placeholder="Ton SITE ID">
+<label>SECRET KEY</label><input type="text" id="secretKey" placeholder="Ton SECRET KEY">
+<button onclick="sauvegarderCles()">SAUVEGARDER LES CLÉS</button>
+</div>
+<div class="card">
+<h3>◆ Configuration Pi SDK</h3>
+<label>Mode Pi</label>
+<select id="piMode"><option value="sandbox">TEST - Sandbox</option><option value="prod">RÉEL - Production</option></select>
+<button class="btn-dark" onclick="changerPiMode()">CHANGER MODE PI</button>
+</div>
+</div>
+
+<!-- PAGE HIST -->
+<div id="page-hist" style="display:none">
+<div class="card"><h3>🧾 Historique</h3><small>Aucune transaction pour le moment</small></div>
+</div>
+
+<div class="tabs">
+<div id="tab-wallet" class="active" onclick="showPage('wallet')">🏠<br>Wallet</div>
+<div id="tab-pays" onclick="showPage('pays')">🌍<br>Pays</div>
+<div id="tab-profil" onclick="showPage('profil')">👤<br>Profil</div>
+<div id="tab-cles" onclick="showPage('cles')">⚙️<br>Clés</div>
+<div id="tab-hist" onclick="showPage('hist')">🧾<br>Hist.</div>
+</div>
+
+<script>
+// ===== PI SDK =====
+const PI_TAUX = 315000;
+let piUser = null;
+Pi.init({ version: "2.0", sandbox: true });
+function connectPi(){
+  Pi.authenticate(['username','payments','wallet_address'], function(auth){
+    piUser = auth.user.username;
+    document.getElementById('piStatus').innerText = "Connecté Pi : @" + piUser;
+    document.getElementById('piUser').innerText = "@" + piUser;
+    document.getElementById('affPiUser').innerText = "@" + piUser;
+    alert("Bienvenue @" + piUser + " !");
+  }, function(error){ alert("Connexion Pi échouée. Ouvre dans Pi Browser."); });
+}
+function payerAvecPi(){
+  let montantFCFA = parseFloat(document.getElementById('montant').value) || 0;
+  let nom = document.getElementById('nomClient').value || "Client Salima";
+  let totalFCFA = montantFCFA + 5000;
+  let montantPi = Math.round((totalFCFA / PI_TAUX) * 10000) / 10000;
+  if(!piUser){ alert("Connecte-toi d'abord avec Pi !"); return; }
+  Pi.createPayment({ amount: montantPi, memo: "Salima - " + nom + " - " + montantFCFA + " FCFA", metadata: { nom: nom, montantFCFA: montantFCFA } }, {
+    onReadyForServerApproval: function(id){ alert("Paiement Pi créé: " + montantPi + " Pi"); },
+    onReadyForServerCompletion: function(id, txid){ alert("✅ Paiement Pi réussi ! " + montantPi + " Pi"); document.getElementById('histList').innerHTML = "✅ Pi: " + montantPi + " Pi - " + nom; },
+    onCancel: function(){ alert("Paiement Pi annulé"); },
+    onError: function(e){ alert("Erreur Pi: " + e); }
+  });
+}
+function changerPiMode(){
+  let mode = document.getElementById('piMode').value;
+  if(mode=="prod"){ Pi.init({ version: "2.0", sandbox: false }); alert("Mode Pi RÉEL activé."); }
+  else { Pi.init({ version: "2.0", sandbox: true }); alert("Mode Pi TEST activé."); }
+}
+
+// ===== PAGES =====
+function showPage(page){
+  ['wallet','pays','profil','cles','hist'].forEach(p=>{
+    document.getElementById('page-'+p).style.display = (p==page?'block':'none');
+    document.getElementById('tab-'+p).classList.toggle('active', p==page);
+  });
+  window.scrollTo(0,0);
+}
+function showProfilTab(tab){
+  document.getElementById('profil-moi').style.display = (tab=='moi'?'block':'none');
+  document.getElementById('profil-client').style.display = (tab=='client'?'block':'none');
+  document.getElementById('btnMoi').classList.toggle('active', tab=='moi');
+  document.getElementById('btnClient').classList.toggle('active', tab=='client');
+}
+
+// ===== PROFIL CLIENT =====
+let clients = JSON.parse(localStorage.getItem('salima_clients') || '[]');
+function sauvegarderClient(){
+  let nom = document.getElementById('clientNom').value.trim();
+  let tel = document.getElementById('clientTel').value.trim();
+  let pays = document.getElementById('clientPays').value;
+  let benef = document.getElementById('clientBenef').value.trim();
+  let benefTel = document.getElementById('clientBenefTel').value.trim();
+  let pi = document.getElementById('clientPi').value.trim();
+  if(!nom || !tel){ alert("Mets au moins le nom et le téléphone du client !"); return; }
+  let c = {nom, tel, pays, benef, benefTel, pi, date: new Date().toLocaleDateString()};
+  // Si client existe déjà (même tel), on le remplace
+  clients = clients.filter(x=>x.tel!==tel);
+  clients.push(c);
+  localStorage.setItem('salima_clients', JSON.stringify(clients));
+  alert("✅ Client enregistré : " + nom);
+  afficherClients();
+  nouveauClient();
+}
+function afficherClients(){
+  let div = document.getElementById('listeClients');
+  let sel = document.getElementById('selectClient');
+  document.getElementById('topClients').innerText = clients.length + " clients";
+  if(clients.length==0){ div.innerHTML="<small>Aucun client pour le moment.</small>"; sel.innerHTML='<option value="">-- Nouveau client --</option>'; return; }
+  div.innerHTML = clients.map((c,i)=>'<div style="border-bottom:1px solid #222;padding:10px 0"><b>'+c.nom+'</b> - '+c.tel+'<br><small>'+c.pays+' → Bénéficiaire: '+c.benef+' ('+c.benefTel+') | Pi: '+(c.pi||'-')+'</small><br><button style="width:auto;padding:6px 12px;font-size:12px;margin-top:6px" onclick="utiliserClient('+i+')">UTILISER CE CLIENT</button> <button style="width:auto;padding:6px 12px;font-size:12px;background:#ff4444;color:#fff" onclick="supprimerClient('+i+')">SUPPRIMER</button></div>').join('');
+  sel.innerHTML = '<option value="">-- Choisir un client --</option>' + clients.map((c,i)=>'<option value="'+i+'">'+c.nom+' - '+c.tel+'</option>').join('');
+}
+function utiliserClient(i){
+  let c = clients[i];
+  document.getElementById('clientNom').value = c.nom;
+  document.getElementById('clientTel').value = c.tel;
+  document.getElementById('clientPays').value = c.pays;
+  document.getElementById('clientBenef').value = c.benef;
+  document.getElementById('clientBenefTel').value = c.benefTel;
+  document.getElementById('clientPi').value = c.pi;
+  document.getElementById('titreClient').innerText = c.nom;
+  document.getElementById('avatarClient').innerText = c.nom.charAt(0).toUpperCase();
+  // Remplir aussi le calculateur Wallet
+  document.getElementById('nomClient').value = c.benef || c.nom;
+  showPage('wallet');
+  alert("Client " + c.nom + " sélectionné pour l'envoi !");
+}
+function remplirClient(){
+  let idx = document.getElementById('selectClient').value;
+  if(idx==="") return;
+  utiliserClient(parseInt(idx));
+}
+function supprimerClient(i){
+  if(confirm("Supprimer " + clients[i].nom + " ?")){ clients.splice(i,1); localStorage.setItem('salima_clients', JSON.stringify(clients)); afficherClients(); }
+}
+function nouveauClient(){
+  ['clientNom','clientTel','clientBenef','clientBenefTel','clientPi'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('titreClient').innerText = "Nouveau Client";
+  document.getElementById('avatarClient').innerText = "C";
+}
+afficherClients();
+
+// ===== CALCUL + RESTE =====
+function getTaux(pays){
+  if(pays=="NIGERIA") return {taux:2.5, symbole:"₦"};
+  if(pays=="GHANA") return {taux:0.022, symbole:"GH₵"};
+  if(pays=="GUINEE") return {taux:14.5, symbole:"GNF"};
+  return {taux:1, symbole:"FCFA"};
+}
+function calculer(){
+  let montant = parseFloat(document.getElementById('montant').value) || 0;
+  let pays = document.getElementById('paysDest').value;
+  let info = getTaux(pays);
+  let total = montant + 5000;
+  let recu = montant * info.taux;
+  let piEquiv = (total / PI_TAUX).toFixed(4);
+  document.getElementById('resultat').innerHTML = "Il reçoit : <b>"+recu.toLocaleString()+" "+info.symbole+"</b><br>Total à payer : <b>"+total.toLocaleString()+" FCFA</b> <small>(dont 5.000 frais)</small><br>Ou en Pi : <b>"+piEquiv+" Pi</b>";
+}
+calculer();
+function sauvegarderProfil(){
+  let num = document.getElementById('monNumero').value;
+  localStorage.setItem('salima_numero', num);
+  document.getElementById('affNumero').innerText = num;
+  alert("Profil sauvegardé ! Numéro : " + num);
+}
+function sauvegarderCles(){
+  localStorage.setItem('cinetpay_apikey', document.getElementById('apiKey').value);
+  localStorage.setItem('cinetpay_siteid', document.getElementById('siteId').value);
+  localStorage.setItem('cinetpay_secret', document.getElementById('secretKey').value);
+  alert("Clés sauvegardées !");
+}
+function payerAvecCinetPay(){
+  let montant = parseFloat(document.getElementById('montant').value) || 0;
+  let nom = document.getElementById('nomClient').value || "Client Salima";
+  let total = montant + 5000;
+  let apiKey = localStorage.getItem('cinetpay_apikey') || document.getElementById('apiKey').value;
+  let siteId = localStorage.getItem('cinetpay_siteid') || document.getElementById('siteId').value;
+  if(!apiKey || !siteId){ alert("Mets d'abord tes clés dans Clés. Mode Démo."); return; }
+  CinetPay.setConfig({apikey: apiKey, site_id: siteId, notify_url: 'https://aliwahab080-boop.github.io/Salima-transfert/', mode: 'PRODUCTION'});
+  CinetPay.getCheckout({transaction_id: 'SALIMA-' + Date.now(), amount: total, currency: 'XOF', channels: 'MOBILE_MONEY', description: 'Transfert Salima - ' + nom});
+  CinetPay.waitResponse(function(data){ if(data.status == "ACCEPTED"){ alert("Paiement réussi ! " + total + " FCFA"); } else { alert("Paiement échoué"); } });
+}
+let savedNum = localStorage.getItem('salima_numero');
+if(savedNum){ document.getElementById('monNumero').value = savedNum; document.getElementById('affNumero').innerText = savedNum; }
+</script>
+</body>
+                                                 </html>
