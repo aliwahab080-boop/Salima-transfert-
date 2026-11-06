@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Salima V48 - Pays Corrigé</title>
+<style>
+*{box-sizing:border-box;font-family:Arial,sans-serif}
+body{margin:0;background:#111;padding:10px;color:#fff}
+.header{background:linear-gradient(180deg,#7AB800,#4A8C00);color:#fff;padding:14px;border-radius:14px}
+.header h1{margin:0;font-size:22px}
+.badge{background:rgba(0,0,0,.35);padding:5px 10px;border-radius:20px;font-size:12px;font-weight:bold;display:inline-block;margin:3px 2px}
+.badge-pi{background:#111;color:#FFB300;padding:5px 10px;border-radius:20px;font-size:12px;font-weight:bold;border:1px solid #FFB300;display:inline-block}
+.taux{font-size:11px;margin-top:8px;color:#E8FFC9;font-weight:bold}
+.card{background:#1C1C1C;padding:14px;border-radius:16px;margin-top:12px;border:1px solid #333}
+label{font-weight:bold;font-size:13px;display:block;margin-top:12px;color:#ddd}
+input,select{width:100%;padding:13px;border:1px solid #444;border-radius:10px;margin-top:5px;font-size:15px;background:#2A2A2A;color:#fff}
+.tabs{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
+.tab{flex:1;padding:11px;border:none;border-radius:20px;font-weight:bold;background:#2A2A2A;color:#fff;cursor:pointer;min-width:70px}
+.tab.active{background:#7AB800;color:#fff}
+.btn{width:100%;padding:14px;border:none;border-radius:12px;font-weight:bold;font-size:16px;cursor:pointer;margin-top:12px}
+.btn-violet{background:#7AB800;color:#fff}
+.btn-green{background:#25D366;color:#fff}
+.btn-dark{background:#000;color:#fff;border:1px solid #444}
+.btn-red{background:#E11D48;color:#fff}
+.btn-gold{background:#FFB300;color:#111}
+.frais{background:#2A2A2A;padding:12px;border-radius:12px;margin-top:12px;line-height:1.6;border-left:4px solid #7AB800}
+.pi-box{background:#2A1A00;border:1px solid #FFB300;padding:12px;border-radius:12px;margin-top:12px;color:#FFD54F}
+.client{border:1px solid #444;padding:10px;border-radius:12px;margin-top:8px;background:#222}
+.recu{border:2px dashed #7AB800;padding:14px;border-radius:14px;margin-top:12px;background:#1C1C1C;color:#fff}
+.hidden{display:none}
+small{color:#aaa}
+.lock{max-width:420px;margin:40px auto;text-align:center}
+.pin{font-size:28px;text-align:center;letter-spacing:8px}
+</style>
+</head>
+<body>
+
+<div id="ecranLock" class="card lock">
+<h1 style="color:#7AB800;font-size:32px">💜 SALIMA</h1>
+<p>Application verrouillée 🔒<br>Chaque client doit déverrouiller</p>
+<label>Choisir ton profil</label><select id="loginClient"></select>
+<label>Ton Code PIN (4 chiffres)</label><input type="password" id="loginPin" class="pin" maxlength="4" inputmode="numeric" placeholder="••••">
+<button class="btn btn-violet" onclick="deverrouiller()">🔓 DÉVERROUILLER</button>
+<button class="btn btn-dark" onclick="document.getElementById('app').classList.remove('hidden');document.getElementById('ecranLock').classList.add('hidden');showTab('clients',document.querySelectorAll('.tab')[1])">➕ Créer un Profil Client</button>
+</div>
+
+<div id="app" class="hidden">
+<div class="header">
+<h1>124 000 FCFA 👁️</h1>
+<div><span class="badge">🟢 En ligne</span><span class="badge">📍 Niamey - Aéroport</span><span class="badge">2 clients</span></div>
+<div style="margin-top:8px"><span class="badge-pi">● Pi : Non connecté</span></div>
+<div class="taux">1 Pi = 315 000 FCFA | 1 $ = 605 FCFA | 1 € = 655 FCFA</div>
+<div style="display:flex;gap:8px;margin-top:10px">
+<button class="btn btn-dark" style="flex:1;padding:9px;font-size:13px;margin:0" onclick="verrouillerApp()">🔒 Verrouiller</button>
+<button class="btn btn-gold" style="flex:1;padding:9px;font-size:13px;margin:0" onclick="showTab('piTab',document.querySelectorAll('.tab')[3])">🟡 Pi Network</button>
+</div>
+</div>
+
+<div class="tabs">
+<button class="tab" onclick="showTab('paysTab',this)">🌍 Pays</button>
+<button class="tab" onclick="showTab('transfert',this)">💸 Wallet</button>
+<button class="tab active" onclick="showTab('clients',this)">👤 Profil</button>
+<button class="tab" onclick="showTab('factures',this)">🧾 Factures</button>
+<button class="tab" onclick="showTab('piTab',this)">🟡 Pi</button>
+<button class="tab" onclick="showTab('recuTab',this)">📄 Reçu</button>
+</div>
+
+<div id="paysTab" class="card">
+<h3>🌍 Pays & Villages du Niger</h3>
+<label>Pays</label>
+<select id="pays" onchange="changerPays()">
+<option value="Niger">Niger</option>
+<option value="Nigeria">Nigeria</option>
+<option value="Ghana">Ghana</option>
+<option value="Bénin">Bénin</option>
+<option value="Togo">Togo</option>
+<option value="Mali">Mali</option>
+<option value="Burkina Faso">Burkina Faso</option>
+<option value="Côte d'Ivoire">Côte d'Ivoire</option>
+<option value="Sénégal">Sénégal</option>
+<option value="Guinée">Guinée</option>
+<option value="Kenya">Kenya</option>
+<option value="Tanzanie">Tanzanie</option>
+<option value="Ouganda">Ouganda</option>
+<option value="Rwanda">Rwanda</option>
+<option value="Burundi">Burundi</option>
+<option value="Éthiopie">Éthiopie</option>
+<option value="Somalie">Somalie</option>
+<option value="Djibouti">Djibouti</option>
+<option value="Soudan du Sud">Soudan du Sud</option>
+<option value="Madagascar">Madagascar</option>
+<option value="Libye">Libye</option>
+<option value="Algérie">Algérie</option>
+<option value="Maroc">Maroc</option>
+<option value="Mauritanie">Mauritanie</option>
+<option value="Tunisie">Tunisie</option>
+<option value="Égypte">Égypte</option>
+<option value="Soudan">Soudan</option>
+</select>
+<label>Région</label><select id="region" onchange="changerPays()"><option>Niamey</option><option>Maradi</option><option>Zinder</option><option>Tahoua</option><option>Agadez</option><option>Dosso</option><option>Tillabéri</option><option>Diffa</option></select>
+<label>Village / Quartier</label>
+<select id="ville">
+<option>Niamey - Yantala</option>
+<option>Niamey - Aéroport</option>
+<option>Niamey - Harobanda</option>
+<option>Maradi</option>
+<option>Zinder</option>
+<option>Tahoua</option>
+<option>Agadez</option>
+<option>Dosso</option>
+<option>Tillabéri</option>
+</select>
+<label>Ou tape village</label><input placeholder="Ex: Gamkalley">
+<p style="color:#FF6B6B;font-size:13px">📍 Sélection: <b style="color:#fff" id="selectionTxt">Niamey - Aéroport</b></p>
+</div>
+
+<div id="transfert" class="card hidden">
+<label>Type de transfert</label><select id="typeTransfert"><option>Salima → NITA / Amana</option><option>NITA / Amana → Salima</option><option>Salima → Salima</option></select>
+<label>Client</label><select id="clientSelect"><option value="">-- Choisir un client --</option></select>
+<label>Ville</label><select id="ville2"><option>Niamey - Aéroport</option><option>Niamey - Yantala</option><option>Maradi</option><option>Zinder</option></select>
+<label>Montant à envoyer (FCFA)</label><input type="number" id="montant" placeholder="Ex: 5000" oninput="calculer()">
+<label>Mode de paiement</label><select id="modePaiement" onchange="calculer()"><option value="FCFA">💵 FCFA</option><option value="PI">🟡 Pi Network</option><option value="USD">💵 Dollar $</option><option value="EUR">💶 Euro €</option></select>
+<div class="frais" id="detailFrais"></div>
+<div class="pi-box" id="detailPi"></div>
+<label>Téléphone du bénéficiaire</label><input type="tel" id="telBenef" placeholder="Ex: +227 90 00 00 00">
+<button class="btn btn-violet" onclick="demanderMotDePasse('transfert')">✅ VALIDER LE TRANSFERT</button>
+</div>
+
+<div id="clients" class="card hidden">
+<h3>👤 Nouveau Profil Client</h3>
+<label>Nom complet</label><input id="nomClient" placeholder="Ex: Amina Diallo">
+<label>Téléphone</label><input id="telClient" placeholder="Ex: +227 90...">
+<label>Pays</label>
+<select id="paysClient">
+<option>Niger</option><option>Nigeria</option><option>Ghana</option><option>Bénin</option><option>Togo</option><option>Mali</option><option>Burkina Faso</option><option>Côte d'Ivoire</option><option>Sénégal</option><option>Guinée</option><option>Kenya</option><option>Tanzanie</option><option>Maroc</option><option>Algérie</option><option>Égypte</option>
+</select>
+<label>Village / Quartier</label><input id="villageClient" placeholder="Ex: Aéroport, Niamey">
+<label>🔒 Code PIN (4 chiffres)</label><input id="pinClient" type="password" maxlength="4" inputmode="numeric" placeholder="Ex: 1234">
+<label>🔑 Mot de passe transaction (4 chiffres)</label><input id="mdpTransClient" type="password" maxlength="4" inputmode="numeric" placeholder="Ex: 5678">
+<button class="btn btn-violet" onclick="ajouterClient()">➕ Créer Client</button>
+<div id="listeClients"></div>
+</div>
+
+<div id="factures" class="card hidden">
+<h3>🧾 Payer une Facture - FCFA / Pi / $ / €</h3>
+<label>Client</label><select id="clientFacture"><option value="">-- Choisir un client --</option></select>
+<label>Type de facture</label>
+<select id="typeFacture" onchange="changerFacture()">
+<option value="Electricité NIGELEC">💡 Électricité - NIGELEC</option>
+<option value="Eau SEEN">💧 Eau - SEEN</option>
+<option value="Canal+">📺 Abonnement Canal+</option>
+<option value="Airtel">📱 Airtel - Recharge / Forfait</option>
+<option value="Moov Zamani">📱 Moov / Zamani - Recharge / Forfait</option>
+</select>
+<label id="labelRef">Numéro Compteur / Abonné</label><input id="refFacture" placeholder="Ex: 123456">
+<label>Montant / Formule</label>
+<select id="formuleFacture" onchange="calculerFacture()">
+<option value="5000">5000 FCFA</option><option value="10000">10000 FCFA</option><option value="15000">15000 FCFA</option><option value="20000">20000 FCFA</option><option value="50000">50000 FCFA</option><option value="custom">Autre montant...</option>
+</select>
+<input id="montantFactureCustom" type="number" placeholder="Montant libre FCFA" class="hidden" oninput="calculerFacture()">
+<label>Mode de paiement</label><select id="modeFacture" onchange="calculerFacture()"><option value="FCFA">💵 FCFA</option><option value="PI">🟡 Pi Network</option><option value="USD">💵 Dollar $</option><option value="EUR">💶 Euro €</option></select>
+<div class="frais" id="detailFacture"></div><div class="pi-box" id="detailFacturePi"></div>
+<button class="btn btn-violet" onclick="demanderMotDePasse('facture')">✅ PAYER LA FACTURE</button>
+</div>
+
+<div id="piTab" class="card hidden">
+<h3>🟡 Système Pi Connecté</h3>
+<p>Paye avec <b style="color:#FFB300">Pi</b>, <b>FCFA</b>, <b>$</b> ou <b>€</b>.</p>
+<label>Taux Pi - 1 Pi = FCFA</label><input type="number" id="tauxPi" value="315000" oninput="calculer();calculerFacture()">
+<label>Taux Dollar - 1 $ = FCFA</label><input type="number" id="tauxUSD" value="605" oninput="calculer();calculerFacture()">
+<label>Taux Euro - 1 € = FCFA</label><input type="number" id="tauxEUR" value="655" oninput="calculer();calculerFacture()">
+<div class="pi-box" id="infoPi">1 Pi = 315 000 FCFA | 1 $ = 605 FCFA | 1 € = 655 FCFA</div>
+<label>Ton Wallet Pi</label><input id="walletPi" placeholder="Ex: GABC... ton adresse Pi">
+<button class="btn btn-gold" onclick="alert('Wallet Pi enregistré ✅')">💾 Enregistrer Wallet Pi</button>
+</div>
+
+<div id="recuTab" class="card hidden">
+<h3>🧾 Dernier Reçu</h3>
+<div id="recuBox" class="recu">Aucun transfert validé.</div>
+<button class="btn btn-green" onclick="envoyerWhatsApp()">📤 Envoyer Reçu par WhatsApp</button>
+<button class="btn btn-dark" onclick="window.print()">📥 Télécharger / Imprimer</button>
+</div>
+</div>
+
+<div id="popupMdp" class="card hidden" style="position:fixed;top:15%;left:5%;right:5%;z-index:99;border:3px solid #7AB800">
+<h3>🔑 Confirmer</h3><p id="popupInfo"></p>
+<label>Mot de passe Transaction</label><input type="password" id="mdpConfirm" maxlength="4" inputmode="numeric" placeholder="••••" class="pin">
+<button class="btn btn-violet" onclick="confirmerTransaction()">✅ CONFIRMER</button>
+<button class="btn btn-red" onclick="document.getElementById('popupMdp').classList.add('hidden')">❌ Annuler</button>
+</div>
+
+<script>
+const paysData={"Niger":["Niamey - Yantala","Niamey - Aéroport","Niamey - Harobanda","Maradi","Zinder","Tahoua","Agadez","Dosso","Tillabéri"],"Nigeria":["Kano","Lagos","Abuja","Kaduna","Sokoto"],"Ghana":["Accra","Kumasi","Tamale"],"Bénin":["Cotonou","Porto-Novo","Parakou"],"Togo":["Lomé","Sokodé","Kara"],"Mali":["Bamako","Kayes","Sikasso","Mopti"],"Burkina Faso":["Ouagadougou","Bobo-Dioulasso"],"Côte d'Ivoire":["Abidjan","Yamoussoukro","Bouaké"],"Sénégal":["Dakar","Thiès","Saint-Louis"],"Guinée":["Conakry","Kankan","Labé"],"Kenya":["Nairobi","Mombasa","Kisumu"],"Tanzanie":["Dar es Salaam","Arusha","Dodoma"],"Ouganda":["Kampala","Entebbe","Jinja"],"Rwanda":["Kigali","Musanze"],"Burundi":["Bujumbura","Gitega"],"Éthiopie":["Addis-Abeba","Dire Dawa","Adama"],"Somalie":["Mogadiscio","Hargeisa"],"Djibouti":["Djibouti-Ville","Ali Sabieh"],"Soudan du Sud":["Juba","Wau"],"Madagascar":["Antananarivo","Toamasina"],"Libye":["Tripoli","Benghazi"],"Algérie":["Alger","Oran","Constantine"],"Maroc":["Casablanca","Rabat","Marrakech"],"Mauritanie":["Nouakchott","Nouadhibou"],"Tunisie":["Tunis","Sfax"],"Égypte":["Le Caire","Alexandrie"],"Soudan":["Khartoum","Port-Soudan"]};
+let clients=JSON.parse(localStorage.getItem('salima_clients_v46')||'[]');
+let dernierRecu="";let clientConnecte=null;let enAttente=null;
+function getTaux(){return parseFloat(document.getElementById('tauxPi').value)||315000;}
+function getUSD(){return parseFloat(document.getElementById('tauxUSD').value)||605;}
+function getEUR(){return parseFloat(document.getElementById('tauxEUR').value)||655;}
+function changerPays(){let p=document.getElementById('pays').value;let v=paysData[p]||["Niamey - Aéroport"];document.getElementById('ville').innerHTML=v.map(x=>`<option>${x}</option>`).join('');document.getElementById('ville2').innerHTML=v.map(x=>`<option>${x}</option>`).join('');document.getElementById('selectionTxt').innerText=(document.getElementById('region').value||'Niamey')+' - '+(v[0]||'Aéroport');}
+function calculer(){let m=parseFloat(document.getElementById('montant').value)||0;let frais=Math.round(m*0.03);let total=m+frais;let mode=document.getElementById('modePaiement').value;let taux=getTaux();let usd=getUSD();let eur=getEUR();document.getElementById('detailFrais').innerHTML=`Montant : <b>${m.toLocaleString()} FCFA</b><br>Frais 3% : <b>${frais.toLocaleString()} FCFA</b><br><b>Total : ${total.toLocaleString()} FCFA</b>`;let txt=mode==='PI'?`🟡 Paiement en Pi : <b>${(total/taux).toFixed(4)} Pi</b><br><small>1 Pi = ${taux.toLocaleString()} FCFA</small>`:mode==='USD'?`💵 Paiement en Dollar : <b>${(total/usd).toFixed(2)} $</b>`:mode==='EUR'?`💶 Paiement en Euro : <b>${(total/eur).toFixed(2)} €</b>`:`💵 Paiement en FCFA : <b>${total.toLocaleString()} FCFA</b><br><small>= ${(total/taux).toFixed(4)} Pi | ${(total/usd).toFixed(2)} $ | ${(total/eur).toFixed(2)} €</small>`;document.getElementById('detailPi').innerHTML=txt;document.getElementById('infoPi').innerHTML=`1 Pi = ${taux.toLocaleString()} FCFA | 1 $ = ${usd} FCFA | 1 € = ${eur} FCFA`;return {m,frais,total,mode,enPi:(total/taux).toFixed(4),enUSD:(total/usd).toFixed(2),enEUR:(total/eur).toFixed(2)};}
+function changerFacture(){let t=document.getElementById('typeFacture').value;let lbl=document.getElementById('labelRef');let inp=document.getElementById('refFacture');let form=document.getElementById('formuleFacture');if(t.includes('NIGELEC')){lbl.innerText='Numéro Compteur NIGELEC';inp.placeholder='Ex: 12345678';form.innerHTML='<option value="5000">5000 FCFA</option><option value="10000">10000 FCFA</option><option value="20000">20000 FCFA</option><option value="50000">50000 FCFA</option><option value="custom">Autre...</option>';}if(t.includes('SEEN')){lbl.innerText='Numéro Abonné SEEN';inp.placeholder='Ex: SEEN 98765';form.innerHTML='<option value="5000">5000 FCFA</option><option value="10000">10000 FCFA</option><option value="15000">15000 FCFA</option><option value="custom">Autre...</option>';}if(t.includes('Canal')){lbl.innerText='Numéro Carte Canal+';inp.placeholder='Ex: 0123456789';form.innerHTML='<option value="5000">ACCESS - 5000</option><option value="10000">EVASION - 10000</option><option value="15000">ACCESS+ - 15000</option><option value="20000">EVASION+ - 20000</option><option value="custom">Autre...</option>';}if(t.includes('Airtel')){lbl.innerText='Numéro Airtel';inp.placeholder='Ex: +227 96...';form.innerHTML='<option value="500">500</option><option value="1000">1000</option><option value="2000">2000</option><option value="5000">5000</option><option value="10000">10000</option><option value="custom">Autre...</option>';}if(t.includes('Moov')){lbl.innerText='Numéro Moov / Zamani';inp.placeholder='Ex: +227 90...';form.innerHTML='<option value="500">500</option><option value="1000">1000</option><option value="2000">2000</option><option value="5000">5000</option><option value="10000">10000</option><option value="custom">Autre...</option>';}calculerFacture();}
+function calculerFacture(){let sel=document.getElementById('formuleFacture').value;let custom=document.getElementById('montantFactureCustom');if(sel==='custom'){custom.classList.remove('hidden');}else{custom.classList.add('hidden');}let m=sel==='custom'?(parseFloat(custom.value)||0):parseFloat(sel)||0;let frais=Math.round(m*0.03);let total=m+frais;let mode=document.getElementById('modeFacture').value;let taux=getTaux();let usd=getUSD();let eur=getEUR();document.getElementById('detailFacture').innerHTML=`Montant : <b>${m.toLocaleString()} FCFA</b><br>Frais 3% : <b>${frais.toLocaleString()} FCFA</b><br><b>Total : ${total.toLocaleString()} FCFA</b>`;document.getElementById('detailFacturePi').innerHTML=mode==='PI'?`🟡 ${(total/taux).toFixed(4)} Pi` : mode==='USD'?`💵 ${(total/usd).toFixed(2)} $` : mode==='EUR'?`💶 ${(total/eur).toFixed(2)} €` : `💵 ${total.toLocaleString()} FCFA = ${(total/taux).toFixed(4)} Pi`;return {m,frais,total,mode,enPi:(total/taux).toFixed(4),enUSD:(total/usd).toFixed(2),enEUR:(total/eur).toFixed(2)};}
+function showTab(id,btn){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));if(btn)btn.classList.add('active');['paysTab','transfert','clients','factures','piTab','recuTab'].forEach(x=>document.getElementById(x).classList.add('hidden'));document.getElementById(id).classList.remove('hidden');}
+function ajouterClient(){let nom=document.getElementById('nomClient').value.trim();let tel=document.getElementById('telClient').value.trim();let pays=document.getElementById('paysClient').value;let village=document.getElementById('villageClient').value.trim();let pin=document.getElementById('pinClient').value.trim();let mdp=document.getElementById('mdpTransClient').value.trim();if(!nom||!tel){alert('Mets Nom + Téléphone');return;} if(pin.length!==4||mdp.length!==4){alert('PIN et MDP 4 chiffres');return;}clients.push({nom,tel,pays,village,pin,mdp});localStorage.setItem('salima_clients_v46',JSON.stringify(clients));document.getElementById('nomClient').value='';document.getElementById('telClient').value='';document.getElementById('villageClient').value='';document.getElementById('pinClient').value='';document.getElementById('mdpTransClient').value='';afficherClients();alert('Client créé ✅');}
+function afficherClients(){let sel=document.getElementById('clientSelect');sel.innerHTML='<option value="">-- Choisir --</option>'+clients.map((c,i)=>`<option value="${i}">${c.nom} - ${c.tel}</option>`).join('');document.getElementById('clientFacture').innerHTML='<option value="">-- Choisir --</option>'+clients.map((c,i)=>`<option value="${i}">${c.nom}</option>`).join('');let login=document.getElementById('loginClient');login.innerHTML=clients.length?clients.map((c,i)=>`<option value="${i}">${c.nom}</option>`).join(''):'<option value="">Aucun client</option>';document.getElementById('listeClients').innerHTML=clients.length?clients.map(c=>`<div class="client"><b>${c.nom}</b><br>📞 ${c.tel}<br>📍 ${c.village}, ${c.pays}</div>`).join(''):'<p>Aucun client.</p>';}
+function deverrouiller(){let idx=document.getElementById('loginClient').value;let pin=document.getElementById('loginPin').value.trim();if(idx===""||!cl
